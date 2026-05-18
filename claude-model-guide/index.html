@@ -1,0 +1,1347 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Claude Model Selection — Don't Overkill</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Mono:ital,wght@0,300;0,400;0,500;1,300&family=Lora:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0d0d0f;
+    --surface: #141418;
+    --surface2: #1c1c22;
+    --border: #2a2a35;
+    --text: #e8e6e0;
+    --muted: #7a7888;
+    --haiku-col: #4FC3F7;
+    --haiku-dim: #1a3d52;
+    --sonnet-col: #A78BFA;
+    --sonnet-dim: #2d1f4e;
+    --opus-col: #F9A825;
+    --opus-dim: #4a3205;
+    --danger: #ef5350;
+    --ok: #66BB6A;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'DM Mono', monospace;
+    font-size: 14px;
+    line-height: 1.6;
+    overflow-x: hidden;
+  }
+
+  /* ── NOISE TEXTURE ── */
+  body::before {
+    content: '';
+    position: fixed; inset: 0; z-index: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.03'/%3E%3C/svg%3E");
+    pointer-events: none;
+    opacity: 0.4;
+  }
+
+  main { position: relative; z-index: 1; }
+
+  /* ── HERO ── */
+  .hero {
+    padding: 80px 40px 60px;
+    max-width: 1100px;
+    margin: 0 auto;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .hero-label {
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .hero-label::before {
+    content: '';
+    display: inline-block;
+    width: 20px; height: 1px;
+    background: var(--muted);
+  }
+
+  .hero h1 {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(52px, 8vw, 110px);
+    line-height: 0.92;
+    letter-spacing: 0.02em;
+    color: var(--text);
+    margin-bottom: 24px;
+  }
+
+  .hero h1 .accent {
+    -webkit-text-stroke: 1px var(--sonnet-col);
+    color: transparent;
+  }
+
+  .hero-sub {
+    font-family: 'Lora', serif;
+    font-size: 18px;
+    color: var(--muted);
+    max-width: 560px;
+    font-style: italic;
+    line-height: 1.7;
+  }
+
+  .hero-sub strong {
+    color: var(--text);
+    font-style: normal;
+  }
+
+  /* ── WARNING BANNER ── */
+  .warning-banner {
+    margin: 40px auto;
+    max-width: 1100px;
+    padding: 0 40px;
+  }
+
+  .warning-box {
+    border: 1px solid var(--danger);
+    background: rgba(239, 83, 80, 0.05);
+    padding: 20px 28px;
+    display: flex;
+    align-items: flex-start;
+    gap: 18px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .warning-box::before {
+    content: '';
+    position: absolute;
+    left: 0; top: 0; bottom: 0;
+    width: 3px;
+    background: var(--danger);
+  }
+
+  .warning-icon {
+    font-size: 22px;
+    flex-shrink: 0;
+    margin-top: 2px;
+  }
+
+  .warning-text {
+    font-family: 'DM Mono', monospace;
+    font-size: 13px;
+    color: #ffb3b0;
+    line-height: 1.7;
+  }
+
+  .warning-text strong { color: var(--danger); font-weight: 500; }
+
+  /* ── SECTION ── */
+  .section {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 60px 40px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .section-label {
+    font-size: 10px;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 32px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  .section-label span { color: var(--border); font-size: 18px; }
+
+  /* ── MODEL CARDS ── */
+  .model-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 2px;
+    background: var(--border);
+  }
+
+  .model-card {
+    background: var(--surface);
+    padding: 32px 28px;
+    position: relative;
+    overflow: hidden;
+    transition: background 0.2s;
+  }
+
+  .model-card::after {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 3px;
+  }
+
+  .haiku-card::after  { background: var(--haiku-col); }
+  .sonnet-card::after { background: var(--sonnet-col); }
+  .opus-card::after   { background: var(--opus-col); }
+
+  .model-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 20px;
+  }
+
+  .model-dot {
+    width: 10px; height: 10px;
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+  .haiku-card .model-dot  { background: var(--haiku-col); }
+  .sonnet-card .model-dot { background: var(--sonnet-col); }
+  .opus-card .model-dot   { background: var(--opus-col); }
+
+  .model-name {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 36px;
+    letter-spacing: 0.05em;
+    line-height: 1;
+    margin-bottom: 4px;
+  }
+
+  .haiku-card .model-name  { color: var(--haiku-col); }
+  .sonnet-card .model-name { color: var(--sonnet-col); }
+  .opus-card .model-name   { color: var(--opus-col); }
+
+  .model-versions {
+    font-size: 11px;
+    color: var(--muted);
+    letter-spacing: 0.1em;
+    margin-bottom: 20px;
+    font-style: italic;
+  }
+
+  .model-tagline {
+    font-family: 'Lora', serif;
+    font-size: 15px;
+    font-style: italic;
+    color: var(--text);
+    margin-bottom: 24px;
+    line-height: 1.6;
+    min-height: 50px;
+  }
+
+  .stat-row {
+    display: flex;
+    justify-content: space-between;
+    padding: 9px 0;
+    border-top: 1px solid var(--border);
+    font-size: 12px;
+  }
+
+  .stat-label { color: var(--muted); }
+
+  .haiku-card  .stat-value { color: var(--haiku-col); }
+  .sonnet-card .stat-value { color: var(--sonnet-col); }
+  .opus-card   .stat-value { color: var(--opus-col); }
+
+  /* ── SPEED BAR ── */
+  .speed-bar-wrap {
+    margin-top: 20px;
+  }
+
+  .speed-bar-label {
+    font-size: 10px;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 8px;
+  }
+
+  .speed-bar-track {
+    height: 4px;
+    background: var(--border);
+    border-radius: 2px;
+    overflow: hidden;
+  }
+
+  .speed-bar-fill {
+    height: 100%;
+    border-radius: 2px;
+    transition: width 1s ease;
+  }
+
+  .haiku-card  .speed-bar-fill { background: var(--haiku-col); width: 95%; }
+  .sonnet-card .speed-bar-fill { background: var(--sonnet-col); width: 65%; }
+  .opus-card   .speed-bar-fill { background: var(--opus-col); width: 30%; }
+
+  /* ── METER CHART ── */
+  .meter-section {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 60px 40px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .meter-title {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 28px;
+    letter-spacing: 0.05em;
+    color: var(--text);
+    margin-bottom: 8px;
+  }
+
+  .meter-sub {
+    font-size: 12px;
+    color: var(--muted);
+    margin-bottom: 36px;
+    font-style: italic;
+  }
+
+  .meter-row {
+    display: grid;
+    grid-template-columns: 180px 1fr 1fr 1fr;
+    gap: 16px;
+    align-items: center;
+    margin-bottom: 18px;
+  }
+
+  .meter-attr {
+    font-size: 12px;
+    color: var(--muted);
+    text-align: right;
+    padding-right: 16px;
+    border-right: 1px solid var(--border);
+  }
+
+  .meter-cell {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+
+  .meter-bar-track {
+    height: 8px;
+    background: var(--surface2);
+    border-radius: 1px;
+    overflow: hidden;
+  }
+
+  .meter-bar-fill {
+    height: 100%;
+    border-radius: 1px;
+    position: relative;
+  }
+
+  .meter-val {
+    font-size: 10px;
+    letter-spacing: 0.1em;
+  }
+
+  .haiku-fill  { background: var(--haiku-col); }
+  .sonnet-fill { background: var(--sonnet-col); }
+  .opus-fill   { background: var(--opus-col); }
+
+  .haiku-val  { color: var(--haiku-col); }
+  .sonnet-val { color: var(--sonnet-col); }
+  .opus-val   { color: var(--opus-col); }
+
+  .meter-header {
+    display: grid;
+    grid-template-columns: 180px 1fr 1fr 1fr;
+    gap: 16px;
+    margin-bottom: 20px;
+    padding-bottom: 12px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .meter-col-label {
+    font-size: 11px;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    font-weight: 500;
+  }
+
+  /* ── USE CASE MATRIX ── */
+  .matrix-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 10px;
+  }
+
+  .matrix-table th {
+    padding: 14px 16px;
+    text-align: left;
+    font-size: 11px;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--muted);
+    border-bottom: 1px solid var(--border);
+    background: var(--surface);
+  }
+
+  .matrix-table td {
+    padding: 13px 16px;
+    font-size: 12px;
+    border-bottom: 1px solid var(--border);
+    vertical-align: top;
+    line-height: 1.5;
+  }
+
+  .matrix-table tr:hover td { background: var(--surface); }
+
+  .matrix-table td:first-child {
+    color: var(--text);
+    font-weight: 500;
+  }
+
+  .fit-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    padding: 3px 8px;
+    border-radius: 2px;
+    font-size: 11px;
+    letter-spacing: 0.05em;
+  }
+
+  .fit-best   { background: rgba(102,187,106,0.15); color: #66BB6A; }
+  .fit-ok     { background: rgba(255,183,77,0.1);   color: #FFB74D; }
+  .fit-over   { background: rgba(239,83,80,0.12);   color: #ef9a9a; }
+  .fit-poor   { background: rgba(120,120,136,0.12); color: var(--muted); }
+
+  /* ── DECISION TREE ── */
+  .decision-section {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 60px 40px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .decision-flow {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+    max-width: 720px;
+    margin: 40px auto 0;
+  }
+
+  .decision-node {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    padding: 20px 24px;
+    position: relative;
+    transition: border-color 0.2s;
+  }
+
+  .decision-node:hover { border-color: var(--sonnet-col); }
+
+  .decision-q {
+    font-family: 'Lora', serif;
+    font-style: italic;
+    font-size: 15px;
+    color: var(--text);
+    margin-bottom: 14px;
+  }
+
+  .decision-branches {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+  }
+
+  .branch {
+    flex: 1;
+    min-width: 180px;
+    border: 1px solid var(--border);
+    padding: 10px 14px;
+    font-size: 12px;
+    cursor: default;
+    transition: border-color 0.2s;
+  }
+
+  .branch-label {
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.15em;
+    color: var(--muted);
+    margin-bottom: 5px;
+  }
+
+  .branch-ans {
+    color: var(--text);
+    margin-bottom: 6px;
+    line-height: 1.4;
+  }
+
+  .branch-result {
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 0.05em;
+  }
+
+  .br-haiku  .branch-result { color: var(--haiku-col); }
+  .br-sonnet .branch-result { color: var(--sonnet-col); }
+  .br-opus   .branch-result { color: var(--opus-col); }
+
+  .br-haiku  { border-color: var(--haiku-dim); }
+  .br-sonnet { border-color: var(--sonnet-dim); }
+  .br-opus   { border-color: var(--opus-dim); }
+
+  .connector {
+    width: 1px;
+    height: 24px;
+    background: var(--border);
+    margin: 0 auto;
+  }
+
+  /* ── OVERKILL EXAMPLES ── */
+  .overkill-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 2px;
+    background: var(--border);
+    margin-top: 8px;
+  }
+
+  .overkill-card {
+    background: var(--surface);
+    padding: 24px;
+  }
+
+  .ok-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 14px;
+  }
+
+  .ok-emoji { font-size: 20px; }
+
+  .ok-title {
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--text);
+  }
+
+  .ok-scenario {
+    font-family: 'Lora', serif;
+    font-style: italic;
+    font-size: 13px;
+    color: var(--muted);
+    margin-bottom: 16px;
+    line-height: 1.6;
+    padding-left: 12px;
+    border-left: 2px solid var(--border);
+  }
+
+  .ok-row {
+    display: flex;
+    gap: 12px;
+    margin-bottom: 10px;
+    align-items: flex-start;
+  }
+
+  .ok-col {
+    flex: 1;
+    padding: 10px 12px;
+    border-radius: 1px;
+    font-size: 11px;
+    line-height: 1.5;
+  }
+
+  .ok-bad {
+    background: rgba(239,83,80,0.07);
+    border: 1px solid rgba(239,83,80,0.2);
+    color: #ef9a9a;
+  }
+
+  .ok-good {
+    background: rgba(102,187,106,0.07);
+    border: 1px solid rgba(102,187,106,0.2);
+    color: #a5d6a7;
+  }
+
+  .ok-col-label {
+    font-size: 9px;
+    text-transform: uppercase;
+    letter-spacing: 0.2em;
+    margin-bottom: 5px;
+    opacity: 0.7;
+  }
+
+  /* ── COST CALLOUT ── */
+  .cost-bar-section {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 60px 40px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .cost-visual {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 2px;
+    background: var(--border);
+    margin-top: 32px;
+  }
+
+  .cost-cell {
+    background: var(--surface);
+    padding: 28px 24px;
+    text-align: center;
+    position: relative;
+  }
+
+  .cost-model-name {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 28px;
+    letter-spacing: 0.05em;
+    margin-bottom: 20px;
+  }
+
+  .haiku-card .cost-model-name,
+  .cost-cell.haiku-cost .cost-model-name  { color: var(--haiku-col); }
+  .cost-cell.sonnet-cost .cost-model-name { color: var(--sonnet-col); }
+  .cost-cell.opus-cost .cost-model-name   { color: var(--opus-col); }
+
+  .cost-coins {
+    font-size: 32px;
+    letter-spacing: 2px;
+    margin-bottom: 10px;
+    min-height: 42px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 3px;
+    flex-wrap: wrap;
+  }
+
+  .coin { opacity: 0.25; }
+  .coin.active { opacity: 1; }
+
+  .cost-label {
+    font-size: 11px;
+    color: var(--muted);
+    letter-spacing: 0.1em;
+  }
+
+  .cost-relative {
+    margin-top: 12px;
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 22px;
+    letter-spacing: 0.05em;
+  }
+
+  .haiku-cost .cost-relative  { color: var(--haiku-col); }
+  .sonnet-cost .cost-relative { color: var(--sonnet-col); }
+  .opus-cost .cost-relative   { color: var(--opus-col); }
+
+  /* ── FOOTER ── */
+  .footer {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 48px 40px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: gap;
+  }
+
+  .footer-msg {
+    font-family: 'Lora', serif;
+    font-style: italic;
+    font-size: 15px;
+    color: var(--muted);
+    max-width: 500px;
+    line-height: 1.7;
+  }
+
+  .footer-msg strong { color: var(--text); font-style: normal; }
+
+  .footer-tag {
+    font-size: 10px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--border);
+    text-align: right;
+    line-height: 2;
+  }
+
+  /* ── ANIMATIONS ── */
+  @keyframes fadeSlideUp {
+    from { opacity: 0; transform: translateY(18px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  .hero, .model-grid, .meter-section, .overkill-grid, .cost-visual {
+    animation: fadeSlideUp 0.6s ease both;
+  }
+  .model-grid    { animation-delay: 0.1s; }
+  .meter-section { animation-delay: 0.2s; }
+
+  /* ── RESPONSIVE ── */
+  @media (max-width: 780px) {
+    .hero, .section, .meter-section, .decision-section,
+    .cost-bar-section, .footer { padding: 40px 20px; }
+
+    .model-grid, .cost-visual { grid-template-columns: 1fr; }
+    .overkill-grid { grid-template-columns: 1fr; }
+    .meter-row { grid-template-columns: 100px 1fr 1fr 1fr; }
+    .matrix-table { font-size: 11px; }
+    .hero h1 { font-size: 52px; }
+    .warning-banner { padding: 0 20px; }
+    .meter-header { grid-template-columns: 100px 1fr 1fr 1fr; }
+  }
+</style>
+</head>
+<body>
+<main>
+
+  <!-- ── HERO ── -->
+  <div class="hero">
+    <div class="hero-label">Claude Model Selection Guide · Anthropic</div>
+    <h1>PICK THE<br><span class="accent">RIGHT</span><br>MODEL.</h1>
+    <p class="hero-sub">
+      Not every task needs the biggest brain in the room.<br>
+      <strong>Over-selecting wastes cost, time, and tokens.</strong><br>
+      Under-selecting fails the job. The skill is knowing which is which.
+    </p>
+  </div>
+
+  <!-- ── WARNING ── -->
+  <div class="warning-banner">
+    <div class="warning-box">
+      <div class="warning-icon">⚠</div>
+      <div class="warning-text">
+        <strong>COMMON MISTAKE:</strong> Defaulting to Opus for every task is like hiring a neurosurgeon to change a lightbulb.
+        You're paying 15–30× more, waiting longer, and the result is the same.
+        <strong>Model selection is a professional skill.</strong> This guide trains that instinct.
+      </div>
+    </div>
+  </div>
+
+  <!-- ── MODEL CARDS ── -->
+  <div class="section">
+    <div class="section-label"><span>01</span> The Three Tiers</div>
+    <div class="model-grid">
+
+      <!-- HAIKU -->
+      <div class="model-card haiku-card">
+        <div class="model-badge">
+          <div class="model-dot"></div>
+          <span style="font-size:11px;letter-spacing:0.12em;color:var(--haiku-col);text-transform:uppercase">Tier 1 · Speed</span>
+        </div>
+        <div class="model-name">Haiku</div>
+        <div class="model-versions">claude-haiku-4-5 · claude-haiku-4-7</div>
+        <div class="model-tagline">"The sprinter. Blink-fast, cost-effective, capable enough for the everyday."</div>
+
+        <div class="stat-row"><span class="stat-label">Speed</span><span class="stat-value">⚡⚡⚡ Fastest</span></div>
+        <div class="stat-row"><span class="stat-label">Cost</span><span class="stat-value">$ (Lowest)</span></div>
+        <div class="stat-row"><span class="stat-label">Reasoning Depth</span><span class="stat-value">Moderate</span></div>
+        <div class="stat-row"><span class="stat-label">Context Window</span><span class="stat-value">200K tokens</span></div>
+        <div class="stat-row"><span class="stat-label">Best For</span><span class="stat-value">Classify · Extract · Route</span></div>
+
+        <div class="speed-bar-wrap">
+          <div class="speed-bar-label">Relative Throughput</div>
+          <div class="speed-bar-track"><div class="speed-bar-fill"></div></div>
+        </div>
+      </div>
+
+      <!-- SONNET -->
+      <div class="model-card sonnet-card">
+        <div class="model-badge">
+          <div class="model-dot"></div>
+          <span style="font-size:11px;letter-spacing:0.12em;color:var(--sonnet-col);text-transform:uppercase">Tier 2 · Balance ★ Default</span>
+        </div>
+        <div class="model-name">Sonnet</div>
+        <div class="model-versions">claude-sonnet-4-6 · claude-sonnet-4-7</div>
+        <div class="model-tagline">"The workhorse. Intelligent, versatile, the right answer for most real work."</div>
+
+        <div class="stat-row"><span class="stat-label">Speed</span><span class="stat-value">⚡⚡ Fast</span></div>
+        <div class="stat-row"><span class="stat-label">Cost</span><span class="stat-value">$$ (Mid)</span></div>
+        <div class="stat-row"><span class="stat-label">Reasoning Depth</span><span class="stat-value">Strong</span></div>
+        <div class="stat-row"><span class="stat-label">Context Window</span><span class="stat-value">200K tokens</span></div>
+        <div class="stat-row"><span class="stat-label">Best For</span><span class="stat-value">Code · Analyze · Write</span></div>
+
+        <div class="speed-bar-wrap">
+          <div class="speed-bar-label">Relative Throughput</div>
+          <div class="speed-bar-track"><div class="speed-bar-fill"></div></div>
+        </div>
+      </div>
+
+      <!-- OPUS -->
+      <div class="model-card opus-card">
+        <div class="model-badge">
+          <div class="model-dot"></div>
+          <span style="font-size:11px;letter-spacing:0.12em;color:var(--opus-col);text-transform:uppercase">Tier 3 · Intelligence</span>
+        </div>
+        <div class="model-name">Opus</div>
+        <div class="model-versions">claude-opus-4-6 · claude-opus-4-7</div>
+        <div class="model-tagline">"The strategist. Deep reasoning for genuinely complex, high-stakes challenges."</div>
+
+        <div class="stat-row"><span class="stat-label">Speed</span><span class="stat-value">⚡ Slower</span></div>
+        <div class="stat-row"><span class="stat-label">Cost</span><span class="stat-value">$$$$ (Highest)</span></div>
+        <div class="stat-row"><span class="stat-label">Reasoning Depth</span><span class="stat-value">Exceptional</span></div>
+        <div class="stat-row"><span class="stat-label">Context Window</span><span class="stat-value">200K tokens</span></div>
+        <div class="stat-row"><span class="stat-label">Best For</span><span class="stat-value">Research · Strategy · Novel problems</span></div>
+
+        <div class="speed-bar-wrap">
+          <div class="speed-bar-label">Relative Throughput</div>
+          <div class="speed-bar-track"><div class="speed-bar-fill"></div></div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ── CAPABILITY METERS ── -->
+  <div class="meter-section">
+    <div class="section-label"><span>02</span> Capability Comparison</div>
+    <div class="meter-title">Where Each Model Shines</div>
+    <div class="meter-sub">Relative performance across key capability dimensions</div>
+
+    <div class="meter-header">
+      <div></div>
+      <div class="meter-col-label haiku-val">Haiku</div>
+      <div class="meter-col-label sonnet-val">Sonnet</div>
+      <div class="meter-col-label opus-val">Opus</div>
+    </div>
+
+    <!-- Rows (static HTML) -->
+    <div id="meter-rows">
+
+      <div class="meter-row">
+        <div class="meter-attr">Speed / Latency</div>
+        <div class="meter-cell"><div class="meter-bar-track"><div class="meter-bar-fill haiku-fill" style="width:96%"></div></div><div class="meter-val haiku-val">96%</div></div>
+        <div class="meter-cell"><div class="meter-bar-track"><div class="meter-bar-fill sonnet-fill" style="width:68%"></div></div><div class="meter-val sonnet-val">68%</div></div>
+        <div class="meter-cell"><div class="meter-bar-track"><div class="meter-bar-fill opus-fill" style="width:32%"></div></div><div class="meter-val opus-val">32%</div></div>
+      </div>
+
+      <div class="meter-row">
+        <div class="meter-attr">Cost Efficiency</div>
+        <div class="meter-cell"><div class="meter-bar-track"><div class="meter-bar-fill haiku-fill" style="width:95%"></div></div><div class="meter-val haiku-val">95%</div></div>
+        <div class="meter-cell"><div class="meter-bar-track"><div class="meter-bar-fill sonnet-fill" style="width:65%"></div></div><div class="meter-val sonnet-val">65%</div></div>
+        <div class="meter-cell"><div class="meter-bar-track"><div class="meter-bar-fill opus-fill" style="width:18%"></div></div><div class="meter-val opus-val">18%</div></div>
+      </div>
+
+      <div class="meter-row">
+        <div class="meter-attr">Instruction Following</div>
+        <div class="meter-cell"><div class="meter-bar-track"><div class="meter-bar-fill haiku-fill" style="width:72%"></div></div><div class="meter-val haiku-val">72%</div></div>
+        <div class="meter-cell"><div class="meter-bar-track"><div class="meter-bar-fill sonnet-fill" style="width:88%"></div></div><div class="meter-val sonnet-val">88%</div></div>
+        <div class="meter-cell"><div class="meter-bar-track"><div class="meter-bar-fill opus-fill" style="width:95%"></div></div><div class="meter-val opus-val">95%</div></div>
+      </div>
+
+      <div class="meter-row">
+        <div class="meter-attr">Code Generation</div>
+        <div class="meter-cell"><div class="meter-bar-track"><div class="meter-bar-fill haiku-fill" style="width:60%"></div></div><div class="meter-val haiku-val">60%</div></div>
+        <div class="meter-cell"><div class="meter-bar-track"><div class="meter-bar-fill sonnet-fill" style="width:88%"></div></div><div class="meter-val sonnet-val">88%</div></div>
+        <div class="meter-cell"><div class="meter-bar-track"><div class="meter-bar-fill opus-fill" style="width:96%"></div></div><div class="meter-val opus-val">96%</div></div>
+      </div>
+
+      <div class="meter-row">
+        <div class="meter-attr">Complex Reasoning</div>
+        <div class="meter-cell"><div class="meter-bar-track"><div class="meter-bar-fill haiku-fill" style="width:42%"></div></div><div class="meter-val haiku-val">42%</div></div>
+        <div class="meter-cell"><div class="meter-bar-track"><div class="meter-bar-fill sonnet-fill" style="width:82%"></div></div><div class="meter-val sonnet-val">82%</div></div>
+        <div class="meter-cell"><div class="meter-bar-track"><div class="meter-bar-fill opus-fill" style="width:97%"></div></div><div class="meter-val opus-val">97%</div></div>
+      </div>
+
+      <div class="meter-row">
+        <div class="meter-attr">Creative Writing</div>
+        <div class="meter-cell"><div class="meter-bar-track"><div class="meter-bar-fill haiku-fill" style="width:55%"></div></div><div class="meter-val haiku-val">55%</div></div>
+        <div class="meter-cell"><div class="meter-bar-track"><div class="meter-bar-fill sonnet-fill" style="width:84%"></div></div><div class="meter-val sonnet-val">84%</div></div>
+        <div class="meter-cell"><div class="meter-bar-track"><div class="meter-bar-fill opus-fill" style="width:96%"></div></div><div class="meter-val opus-val">96%</div></div>
+      </div>
+
+      <div class="meter-row">
+        <div class="meter-attr">Data Extraction</div>
+        <div class="meter-cell"><div class="meter-bar-track"><div class="meter-bar-fill haiku-fill" style="width:82%"></div></div><div class="meter-val haiku-val">82%</div></div>
+        <div class="meter-cell"><div class="meter-bar-track"><div class="meter-bar-fill sonnet-fill" style="width:88%"></div></div><div class="meter-val sonnet-val">88%</div></div>
+        <div class="meter-cell"><div class="meter-bar-track"><div class="meter-bar-fill opus-fill" style="width:90%"></div></div><div class="meter-val opus-val">90%</div></div>
+      </div>
+
+      <div class="meter-row">
+        <div class="meter-attr">Long-doc Analysis</div>
+        <div class="meter-cell"><div class="meter-bar-track"><div class="meter-bar-fill haiku-fill" style="width:58%"></div></div><div class="meter-val haiku-val">58%</div></div>
+        <div class="meter-cell"><div class="meter-bar-track"><div class="meter-bar-fill sonnet-fill" style="width:84%"></div></div><div class="meter-val sonnet-val">84%</div></div>
+        <div class="meter-cell"><div class="meter-bar-track"><div class="meter-bar-fill opus-fill" style="width:96%"></div></div><div class="meter-val opus-val">96%</div></div>
+      </div>
+
+      <div class="meter-row">
+        <div class="meter-attr">Multi-step Planning</div>
+        <div class="meter-cell"><div class="meter-bar-track"><div class="meter-bar-fill haiku-fill" style="width:40%"></div></div><div class="meter-val haiku-val">40%</div></div>
+        <div class="meter-cell"><div class="meter-bar-track"><div class="meter-bar-fill sonnet-fill" style="width:78%"></div></div><div class="meter-val sonnet-val">78%</div></div>
+        <div class="meter-cell"><div class="meter-bar-track"><div class="meter-bar-fill opus-fill" style="width:97%"></div></div><div class="meter-val opus-val">97%</div></div>
+      </div>
+
+      <div class="meter-row">
+        <div class="meter-attr">Summarization</div>
+        <div class="meter-cell"><div class="meter-bar-track"><div class="meter-bar-fill haiku-fill" style="width:80%"></div></div><div class="meter-val haiku-val">80%</div></div>
+        <div class="meter-cell"><div class="meter-bar-track"><div class="meter-bar-fill sonnet-fill" style="width:88%"></div></div><div class="meter-val sonnet-val">88%</div></div>
+        <div class="meter-cell"><div class="meter-bar-track"><div class="meter-bar-fill opus-fill" style="width:90%"></div></div><div class="meter-val opus-val">90%</div></div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ── USE CASE MATRIX ── -->
+  <div class="section">
+    <div class="section-label"><span>03</span> Task Fit Matrix</div>
+    <table class="matrix-table">
+      <thead>
+        <tr>
+          <th>Task</th>
+          <th style="color:var(--haiku-col)">Haiku 4.5/4.7</th>
+          <th style="color:var(--sonnet-col)">Sonnet 4.6/4.7</th>
+          <th style="color:var(--opus-col)">Opus 4.6/4.7</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Classify a support ticket</td>
+          <td><span class="fit-badge fit-best">✓ Best fit</span></td>
+          <td><span class="fit-badge fit-ok">△ Overkill</span></td>
+          <td><span class="fit-badge fit-over">✗ Way overkill</span></td>
+        </tr>
+        <tr>
+          <td>Extract fields from a form/email</td>
+          <td><span class="fit-badge fit-best">✓ Best fit</span></td>
+          <td><span class="fit-badge fit-ok">△ Acceptable</span></td>
+          <td><span class="fit-badge fit-over">✗ Overkill</span></td>
+        </tr>
+        <tr>
+          <td>Generate a short FAQ reply</td>
+          <td><span class="fit-badge fit-best">✓ Best fit</span></td>
+          <td><span class="fit-badge fit-ok">△ Acceptable</span></td>
+          <td><span class="fit-badge fit-over">✗ Overkill</span></td>
+        </tr>
+        <tr>
+          <td>Write a feature in Python / JS</td>
+          <td><span class="fit-badge fit-poor">✗ Too shallow</span></td>
+          <td><span class="fit-badge fit-best">✓ Best fit</span></td>
+          <td><span class="fit-badge fit-ok">△ Overkill</span></td>
+        </tr>
+        <tr>
+          <td>Summarize a 50-page PDF</td>
+          <td><span class="fit-badge fit-ok">△ Shallow summary</span></td>
+          <td><span class="fit-badge fit-best">✓ Best fit</span></td>
+          <td><span class="fit-badge fit-ok">△ Fine but costly</span></td>
+        </tr>
+        <tr>
+          <td>Debug complex distributed code</td>
+          <td><span class="fit-badge fit-poor">✗ Too shallow</span></td>
+          <td><span class="fit-badge fit-best">✓ Best fit</span></td>
+          <td><span class="fit-badge fit-ok">△ If stuck, fine</span></td>
+        </tr>
+        <tr>
+          <td>Draft a business email</td>
+          <td><span class="fit-badge fit-ok">△ OK for simple</span></td>
+          <td><span class="fit-badge fit-best">✓ Best fit</span></td>
+          <td><span class="fit-badge fit-over">✗ Overkill</span></td>
+        </tr>
+        <tr>
+          <td>Research a new scientific domain</td>
+          <td><span class="fit-badge fit-poor">✗ Insufficient</span></td>
+          <td><span class="fit-badge fit-ok">△ Decent</span></td>
+          <td><span class="fit-badge fit-best">✓ Best fit</span></td>
+        </tr>
+        <tr>
+          <td>Multi-step strategic plan (novel)</td>
+          <td><span class="fit-badge fit-poor">✗ Insufficient</span></td>
+          <td><span class="fit-badge fit-ok">△ Acceptable</span></td>
+          <td><span class="fit-badge fit-best">✓ Best fit</span></td>
+        </tr>
+        <tr>
+          <td>Adversarial red-teaming / eval</td>
+          <td><span class="fit-badge fit-poor">✗ Insufficient</span></td>
+          <td><span class="fit-badge fit-ok">△ Partial</span></td>
+          <td><span class="fit-badge fit-best">✓ Best fit</span></td>
+        </tr>
+        <tr>
+          <td>Translate text (common language)</td>
+          <td><span class="fit-badge fit-best">✓ Best fit</span></td>
+          <td><span class="fit-badge fit-ok">△ Overkill</span></td>
+          <td><span class="fit-badge fit-over">✗ Way overkill</span></td>
+        </tr>
+        <tr>
+          <td>High-stakes legal/medical reasoning</td>
+          <td><span class="fit-badge fit-poor">✗ Risky</span></td>
+          <td><span class="fit-badge fit-ok">△ Use carefully</span></td>
+          <td><span class="fit-badge fit-best">✓ Best fit</span></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- ── DECISION FLOW ── -->
+  <div class="decision-section">
+    <div class="section-label"><span>04</span> Model Selection Decision Tree</div>
+    <div style="font-family:'Bebas Neue',sans-serif;font-size:28px;letter-spacing:0.05em;margin-bottom:6px">Ask These Questions First</div>
+    <div style="font-size:12px;color:var(--muted);font-style:italic">Work through this before writing a single API call</div>
+
+    <div class="decision-flow">
+
+      <div class="decision-node">
+        <div class="decision-q">1 — Is the task well-defined with a clear, narrow output?</div>
+        <div class="decision-branches">
+          <div class="branch br-haiku">
+            <div class="branch-label">Yes →</div>
+            <div class="branch-ans">Single-step, structured output — classify, extract, translate, route</div>
+            <div class="branch-result">→ Start with HAIKU</div>
+          </div>
+          <div class="branch br-sonnet">
+            <div class="branch-label">No →</div>
+            <div class="branch-ans">Involves writing, synthesis, reasoning, or multi-step generation</div>
+            <div class="branch-result">→ Continue to Q2</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="connector"></div>
+
+      <div class="decision-node">
+        <div class="decision-q">2 — Does the task involve novel problem-solving, deep analysis, or genuine uncertainty?</div>
+        <div class="decision-branches">
+          <div class="branch br-sonnet">
+            <div class="branch-label">No →</div>
+            <div class="branch-ans">Standard coding, writing, summarization, familiar domain work</div>
+            <div class="branch-result">→ Use SONNET</div>
+          </div>
+          <div class="branch br-opus">
+            <div class="branch-label">Yes →</div>
+            <div class="branch-ans">Research, strategic planning, adversarial tasks, hard cross-domain reasoning</div>
+            <div class="branch-result">→ Continue to Q3</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="connector"></div>
+
+      <div class="decision-node">
+        <div class="decision-q">3 — Did Sonnet already fail, or is the task high-stakes enough to justify 15–30× cost?</div>
+        <div class="decision-branches">
+          <div class="branch br-sonnet">
+            <div class="branch-label">No →</div>
+            <div class="branch-ans">Try Sonnet first. You might be surprised.</div>
+            <div class="branch-result">→ Use SONNET, escalate if needed</div>
+          </div>
+          <div class="branch br-opus">
+            <div class="branch-label">Yes →</div>
+            <div class="branch-ans">Sonnet failed, or the stakes clearly justify the cost and wait time</div>
+            <div class="branch-result">→ Use OPUS</div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ── OVERKILL EXAMPLES ── -->
+  <div class="section">
+    <div class="section-label"><span>05</span> Overkill in the Wild</div>
+    <div style="font-family:'Bebas Neue',sans-serif;font-size:28px;letter-spacing:0.05em;margin-bottom:6px">Real Examples · Bad vs Good Choice</div>
+    <div style="font-size:12px;color:var(--muted);font-style:italic;margin-bottom:0">See the pattern. Build the instinct.</div>
+    <div class="overkill-grid">
+
+      <div class="overkill-card">
+        <div class="ok-header"><div class="ok-emoji">🎫</div><div class="ok-title">Support Ticket Routing</div></div>
+        <div class="ok-scenario">"Classify this customer message as billing, technical, or general inquiry."</div>
+        <div class="ok-row">
+          <div class="ok-col ok-bad"><div class="ok-col-label">❌ Over-selected</div>Using <strong>Opus</strong> — $0.015/1K tokens, 8 sec latency, 30× more expensive. The nuance here is zero.</div>
+          <div class="ok-col ok-good"><div class="ok-col-label">✓ Right choice</div>Using <strong>Haiku</strong> — $0.00025/1K tokens, under 1 sec. Perfect for high-volume classification.</div>
+        </div>
+      </div>
+
+      <div class="overkill-card">
+        <div class="ok-header"><div class="ok-emoji">📧</div><div class="ok-title">Email Reply Draft</div></div>
+        <div class="ok-scenario">"Write a polite 3-sentence reply to this meeting request."</div>
+        <div class="ok-row">
+          <div class="ok-col ok-bad"><div class="ok-col-label">❌ Over-selected</div>Using <strong>Opus</strong> — maximal reasoning applied to a 3-sentence social task. Same output, 20× the wait.</div>
+          <div class="ok-col ok-good"><div class="ok-col-label">✓ Right choice</div><strong>Haiku or Sonnet</strong> — Haiku for templated, Sonnet if tone nuance matters. Both are instant.</div>
+        </div>
+      </div>
+
+      <div class="overkill-card">
+        <div class="ok-header"><div class="ok-emoji">🐛</div><div class="ok-title">Debugging a Function</div></div>
+        <div class="ok-scenario">"This Python function is throwing a KeyError. What's wrong?"</div>
+        <div class="ok-row">
+          <div class="ok-col ok-bad"><div class="ok-col-label">❌ Under-selected</div>Using <strong>Haiku</strong> — too shallow for code reasoning, may miss the root cause in non-trivial codebases.</div>
+          <div class="ok-col ok-good"><div class="ok-col-label">✓ Right choice</div><strong>Sonnet</strong> — strong code reasoning, fast, cost-efficient. Opus only if it involves deep system-wide logic.</div>
+        </div>
+      </div>
+
+      <div class="overkill-card">
+        <div class="ok-header"><div class="ok-emoji">🔬</div><div class="ok-title">Novel Research Synthesis</div></div>
+        <div class="ok-scenario">"Synthesize the latest findings on mRNA vaccine platforms and identify open research questions."</div>
+        <div class="ok-row">
+          <div class="ok-col ok-bad"><div class="ok-col-label">❌ Under-selected</div>Using <strong>Haiku or Sonnet</strong> — may miss nuance, conflate findings, or fail to identify genuine gaps in a complex field.</div>
+          <div class="ok-col ok-good"><div class="ok-col-label">✓ Right choice</div><strong>Opus</strong> — this is exactly where Opus earns its price. Deep domain reasoning, multi-source synthesis.</div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ── COST VISUAL ── -->
+  <div class="cost-bar-section">
+    <div class="section-label"><span>06</span> The Cost Reality</div>
+    <div style="font-family:'Bebas Neue',sans-serif;font-size:28px;letter-spacing:0.05em;margin-bottom:6px">Relative Cost Per Million Tokens</div>
+    <div style="font-size:12px;color:var(--muted);font-style:italic">Illustrative ratios — exact pricing at anthropic.com/pricing</div>
+
+    <div class="cost-visual">
+      <div class="cost-cell haiku-cost">
+        <div class="cost-model-name" style="color:var(--haiku-col)">Haiku</div>
+        <div class="cost-coins">
+          <span class="coin active" style="color:var(--haiku-col)">●</span>
+          <span class="coin" style="color:var(--haiku-col)">●</span>
+          <span class="coin" style="color:var(--haiku-col)">●</span>
+          <span class="coin" style="color:var(--haiku-col)">●</span>
+          <span class="coin" style="color:var(--haiku-col)">●</span>
+        </div>
+        <div class="cost-label">Lowest input cost</div>
+        <div class="cost-relative" style="color:var(--haiku-col)">1× Baseline</div>
+        <div style="font-size:11px;color:var(--muted);margin-top:8px;font-style:italic">High-volume tasks — batch at scale</div>
+      </div>
+
+      <div class="cost-cell sonnet-cost">
+        <div class="cost-model-name" style="color:var(--sonnet-col)">Sonnet</div>
+        <div class="cost-coins">
+          <span class="coin active" style="color:var(--sonnet-col)">●</span>
+          <span class="coin active" style="color:var(--sonnet-col)">●</span>
+          <span class="coin active" style="color:var(--sonnet-col)">●</span>
+          <span class="coin" style="color:var(--sonnet-col)">●</span>
+          <span class="coin" style="color:var(--sonnet-col)">●</span>
+        </div>
+        <div class="cost-label">Mid-range cost</div>
+        <div class="cost-relative" style="color:var(--sonnet-col)">~5–8× Haiku</div>
+        <div style="font-size:11px;color:var(--muted);margin-top:8px;font-style:italic">Production workloads — daily use</div>
+      </div>
+
+      <div class="cost-cell opus-cost">
+        <div class="cost-model-name" style="color:var(--opus-col)">Opus</div>
+        <div class="cost-coins">
+          <span class="coin active" style="color:var(--opus-col)">●</span>
+          <span class="coin active" style="color:var(--opus-col)">●</span>
+          <span class="coin active" style="color:var(--opus-col)">●</span>
+          <span class="coin active" style="color:var(--opus-col)">●</span>
+          <span class="coin active" style="color:var(--opus-col)">●</span>
+        </div>
+        <div class="cost-label">Premium cost</div>
+        <div class="cost-relative" style="color:var(--opus-col)">~15–30× Haiku</div>
+        <div style="font-size:11px;color:var(--muted);margin-top:8px;font-style:italic">Strategic tasks — use intentionally</div>
+      </div>
+    </div>
+
+    <!-- SCENARIO NOTE -->
+    <div style="margin-top:24px;padding:20px 24px;background:var(--surface);border:1px solid var(--border);">
+      <div style="font-size:11px;letter-spacing:0.15em;text-transform:uppercase;color:var(--muted);margin-bottom:10px">💡 Quick Math</div>
+      <div style="font-size:13px;color:var(--text);line-height:1.8">
+        Processing <strong>10,000 support tickets/day</strong> with Opus ≈ <span style="color:var(--danger)">$1,500/day</span><br>
+        Processing <strong>10,000 support tickets/day</strong> with Haiku ≈ <span style="color:var(--ok)">$25/day</span><br>
+        <span style="color:var(--muted);font-style:italic;font-size:12px">Same classification quality. 60× cost difference.</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── CHEAT SHEET ── -->
+  <div class="section">
+    <div class="section-label"><span>07</span> The Cheat Sheet</div>
+    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:2px;background:var(--border)">
+
+      <div style="background:var(--surface);padding:28px 24px;border-top:3px solid var(--haiku-col)">
+        <div style="font-family:'Bebas Neue',sans-serif;font-size:32px;color:var(--haiku-col);letter-spacing:0.05em;margin-bottom:16px">HAIKU</div>
+        <div style="font-size:12px;color:var(--muted);margin-bottom:14px;font-style:italic">Reach for Haiku when…</div>
+        <div style="font-size:12px;color:var(--text);line-height:2">
+          ↳ Task has a single correct output<br>
+          ↳ High volume (1K+ calls/day)<br>
+          ↳ Speed &lt; 1 sec is needed<br>
+          ↳ Classify, tag, route, translate<br>
+          ↳ You've tested — it passes the eval<br>
+          ↳ Cost matters more than nuance
+        </div>
+      </div>
+
+      <div style="background:var(--surface);padding:28px 24px;border-top:3px solid var(--sonnet-col)">
+        <div style="font-family:'Bebas Neue',sans-serif;font-size:32px;color:var(--sonnet-col);letter-spacing:0.05em;margin-bottom:16px">SONNET</div>
+        <div style="font-size:12px;color:var(--muted);margin-bottom:14px;font-style:italic">Reach for Sonnet when…</div>
+        <div style="font-size:12px;color:var(--text);line-height:2">
+          ↳ Code generation or debugging<br>
+          ↳ Writing with real quality bar<br>
+          ↳ Summarizing long documents<br>
+          ↳ You're unsure — default here<br>
+          ↳ Multi-step but familiar domain<br>
+          ↳ Production API, daily tasks
+        </div>
+      </div>
+
+      <div style="background:var(--surface);padding:28px 24px;border-top:3px solid var(--opus-col)">
+        <div style="font-family:'Bebas Neue',sans-serif;font-size:32px;color:var(--opus-col);letter-spacing:0.05em;margin-bottom:16px">OPUS</div>
+        <div style="font-size:12px;color:var(--muted);margin-bottom:14px;font-style:italic">Reach for Opus when…</div>
+        <div style="font-size:12px;color:var(--text);line-height:2">
+          ↳ Sonnet already failed the task<br>
+          ↳ Genuinely novel problem space<br>
+          ↳ High-stakes: medical, legal, safety<br>
+          ↳ Deep cross-domain synthesis<br>
+          ↳ Strategic decisions with consequences<br>
+          ↳ Cost is irrelevant to the outcome
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ── COWORK SECTION ── -->
+  <div class="section" id="cowork-section">
+    <div class="section-label"><span>08</span> Claude Cowork — Desktop App</div>
+    <div style="font-family:'Bebas Neue',sans-serif;font-size:28px;letter-spacing:0.05em;margin-bottom:6px">Model Selection Inside Cowork</div>
+    <div style="font-size:12px;color:var(--muted);font-style:italic;margin-bottom:32px">Cowork is Anthropic's desktop tool for non-developers to automate file and task management. It uses a slightly different model lineup — the same instinct applies.</div>
+
+    <!-- Cowork model trio -->
+    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:2px;background:var(--border);margin-bottom:32px">
+
+      <div style="background:var(--surface);padding:28px 24px;border-top:3px solid var(--haiku-col);position:relative">
+        <div style="font-size:10px;letter-spacing:0.2em;text-transform:uppercase;color:var(--haiku-col);margin-bottom:10px">Cowork · Speed</div>
+        <div style="font-family:'Bebas Neue',sans-serif;font-size:34px;color:var(--haiku-col);letter-spacing:0.05em;line-height:1">Haiku 4.6</div>
+        <div style="font-size:11px;color:var(--muted);margin:8px 0 16px;font-style:italic">Fastest, lowest usage cost</div>
+        <div style="font-size:12px;color:var(--text);line-height:2">
+          ↳ Quick file renames &amp; sorts<br>
+          ↳ Simple form extraction<br>
+          ↳ Batch repetitive tasks<br>
+          ↳ Fast lookups &amp; summaries<br>
+          ↳ High-volume automation
+        </div>
+        <div style="margin-top:18px;padding:10px 14px;background:rgba(79,195,247,0.06);border:1px solid rgba(79,195,247,0.15);font-size:11px;color:var(--muted);line-height:1.6">
+          💡 Cowork-specific note: Haiku 4.6 is newer than the Haiku 4.5 in the API — same tier, slightly improved.
+        </div>
+      </div>
+
+      <div style="background:var(--surface);padding:28px 24px;border-top:3px solid var(--sonnet-col);position:relative">
+        <div style="font-size:10px;letter-spacing:0.2em;text-transform:uppercase;color:var(--sonnet-col);margin-bottom:10px">Cowork · Default ★</div>
+        <div style="font-family:'Bebas Neue',sans-serif;font-size:34px;color:var(--sonnet-col);letter-spacing:0.05em;line-height:1">Sonnet 4.6</div>
+        <div style="font-size:11px;color:var(--muted);margin:8px 0 16px;font-style:italic">Balanced — your everyday Cowork model</div>
+        <div style="font-size:12px;color:var(--text);line-height:2">
+          ↳ Document drafting &amp; editing<br>
+          ↳ Spreadsheet creation<br>
+          ↳ Multi-step file workflows<br>
+          ↳ Email &amp; report generation<br>
+          ↳ Vision + computer use tasks
+        </div>
+        <div style="margin-top:18px;padding:10px 14px;background:rgba(167,139,250,0.06);border:1px solid rgba(167,139,250,0.15);font-size:11px;color:var(--muted);line-height:1.6">
+          💡 Start here for virtually all Cowork tasks. Same model as the API default — consistent behaviour.
+        </div>
+      </div>
+
+      <div style="background:var(--surface);padding:28px 24px;border-top:3px solid var(--opus-col);position:relative">
+        <div style="font-size:10px;letter-spacing:0.2em;text-transform:uppercase;color:var(--opus-col);margin-bottom:10px">Cowork · Power</div>
+        <div style="font-family:'Bebas Neue',sans-serif;font-size:34px;color:var(--opus-col);letter-spacing:0.05em;line-height:1">Opus 4.7</div>
+        <div style="font-size:11px;color:var(--muted);margin:8px 0 16px;font-style:italic">Most capable — deepest reasoning</div>
+        <div style="font-size:12px;color:var(--text);line-height:2">
+          ↳ Complex multi-doc synthesis<br>
+          ↳ Long research &amp; analysis tasks<br>
+          ↳ Tasks Sonnet got wrong<br>
+          ↳ High-stakes deliverables<br>
+          ↳ Novel, open-ended problems
+        </div>
+        <div style="margin-top:18px;padding:10px 14px;background:rgba(249,168,37,0.06);border:1px solid rgba(249,168,37,0.15);font-size:11px;color:var(--muted);line-height:1.6">
+          💡 Cowork uses Opus 4.7 (one step newer than API default Opus 4.6). Reserve for complex tasks only.
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Adaptive Thinking callout -->
+    <div style="background:var(--surface);border:1px solid var(--border);padding:28px 32px;display:grid;grid-template-columns:auto 1fr;gap:24px;align-items:start;margin-bottom:32px">
+      <div style="font-size:36px;line-height:1">🧠</div>
+      <div>
+        <div style="font-family:'Bebas Neue',sans-serif;font-size:22px;letter-spacing:0.05em;color:var(--text);margin-bottom:8px">Adaptive Thinking — Cowork's Smart Toggle</div>
+        <div style="font-size:13px;color:var(--muted);line-height:1.8;margin-bottom:12px">
+          Cowork includes an <strong style="color:var(--text)">Adaptive Thinking</strong> feature (available on Sonnet 4.6 and Opus 4.6/4.7).
+          When enabled, Claude automatically calibrates <em>how much it thinks</em> based on task complexity —
+          simple questions get fast answers, complex ones get deeper reasoning, without you micromanaging it.
+        </div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
+          <div style="padding:12px 16px;background:rgba(102,187,106,0.07);border:1px solid rgba(102,187,106,0.2);font-size:12px;color:#a5d6a7;line-height:1.7">
+            <div style="font-size:10px;text-transform:uppercase;letter-spacing:0.15em;margin-bottom:6px;opacity:0.7">✓ Turn it ON when</div>
+            You're unsure how complex the task is<br>
+            You want the model to self-regulate<br>
+            Tasks vary in depth within a session
+          </div>
+          <div style="padding:12px 16px;background:rgba(239,83,80,0.07);border:1px solid rgba(239,83,80,0.2);font-size:12px;color:#ef9a9a;line-height:1.7">
+            <div style="font-size:10px;text-transform:uppercase;letter-spacing:0.15em;margin-bottom:6px;opacity:0.7">⚠ Watch out</div>
+            It still uses more tokens than Haiku<br>
+            Not a reason to always pick Opus<br>
+            Model tier still matters — start with Sonnet
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Cowork vs API comparison -->
+    <div style="font-family:'Bebas Neue',sans-serif;font-size:20px;letter-spacing:0.05em;color:var(--text);margin-bottom:16px">Cowork vs API — Model Lineup at a Glance</div>
+    <table class="matrix-table">
+      <thead>
+        <tr>
+          <th>Tier</th>
+          <th style="color:var(--haiku-col)">Haiku</th>
+          <th style="color:var(--sonnet-col)">Sonnet</th>
+          <th style="color:var(--opus-col)">Opus</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>claude.ai / API</td>
+          <td style="color:var(--haiku-col)">Haiku 4.5</td>
+          <td style="color:var(--sonnet-col)">Sonnet 4.6</td>
+          <td style="color:var(--opus-col)">Opus 4.6</td>
+        </tr>
+        <tr>
+          <td>Cowork (desktop)</td>
+          <td style="color:var(--haiku-col)">Haiku 4.6 ✦</td>
+          <td style="color:var(--sonnet-col)">Sonnet 4.6</td>
+          <td style="color:var(--opus-col)">Opus 4.7 ✦</td>
+        </tr>
+        <tr>
+          <td style="color:var(--muted);font-size:11px">Selection principle</td>
+          <td style="color:var(--muted);font-size:11px">Fast, simple tasks</td>
+          <td style="color:var(--muted);font-size:11px">Default — most work</td>
+          <td style="color:var(--muted);font-size:11px">Complex only</td>
+        </tr>
+      </tbody>
+    </table>
+    <div style="font-size:11px;color:var(--muted);margin-top:10px;font-style:italic">✦ Cowork ships with newer point versions of Haiku and Opus. The tier logic and selection instinct remains identical.</div>
+
+  </div>
+
+  <!-- ── FOOTER ── -->
+  <div class="footer">
+    <div class="footer-msg">
+      <strong>The best engineers know when to use a scalpel vs a sledgehammer.</strong><br>
+      Model selection isn't about picking the most powerful tool — it's about matching the right tool to the job. Over-engineering wastes resources. Under-engineering fails users. Build the instinct to tell the difference.
+    </div>
+    <div class="footer-tag">
+      Claude Model Guide<br>
+      Haiku · Sonnet · Opus<br>
+      claude.ai · Cowork<br>
+      anthropic.com
+    </div>
+  </div>
+
+</main>
+
+<script>
+  // ── ANIMATE BARS ON LOAD ──
+  window.addEventListener('DOMContentLoaded', () => {
+    const fills = document.querySelectorAll('.meter-bar-fill');
+    fills.forEach(f => {
+      const target = f.style.width;
+      f.style.width = '0%';
+      f.style.transition = 'width 0.9s ease';
+      setTimeout(() => { f.style.width = target; }, 200);
+    });
+  });
+</script>
+</body>
+</html>
