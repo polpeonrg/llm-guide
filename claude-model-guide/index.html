@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Claude Model Selection — Don't Overkill</title>
-<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Mono:ital,wght@0,300;0,400;0,500;1,300&family=Lora:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Mono:ital,wght@0,300;0,400;0,500;1,300&family=Lora:ital,wght@0,400;0,600;1,400&family=Sarabun:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
   :root {
     --bg: #0d0d0f;
@@ -683,6 +683,44 @@
   .model-grid    { animation-delay: 0.1s; }
   .meter-section { animation-delay: 0.2s; }
 
+  /* ── LANG TOGGLE ── */
+  .lang-toggle {
+    position: fixed;
+    top: 20px;
+    right: 24px;
+    z-index: 100;
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    color: var(--muted);
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    padding: 6px 14px;
+    cursor: pointer;
+    transition: border-color 0.2s, color 0.2s;
+  }
+  .lang-toggle:hover {
+    border-color: var(--sonnet-col);
+    color: var(--sonnet-col);
+  }
+
+  /* ── THAI FONT ── */
+  [lang=th] body {
+    font-family: 'Sarabun', sans-serif;
+    line-height: 1.85;
+  }
+  [lang=th] .hero-sub,
+  [lang=th] .warning-text,
+  [lang=th] .model-tagline,
+  [lang=th] .decision-q,
+  [lang=th] .branch-ans,
+  [lang=th] .ok-scenario,
+  [lang=th] .footer-msg {
+    font-family: 'Sarabun', sans-serif;
+    line-height: 1.85;
+  }
+
   /* ── RESPONSIVE ── */
   @media (max-width: 780px) {
     .hero, .section, .meter-section, .decision-section,
@@ -703,9 +741,9 @@
 
   <!-- ── HERO ── -->
   <div class="hero">
-    <div class="hero-label">Claude Model Selection Guide · Anthropic</div>
-    <h1>PICK THE<br><span class="accent">RIGHT</span><br>MODEL.</h1>
-    <p class="hero-sub">
+    <div class="hero-label" data-i18n="hero-label">Claude Model Selection Guide · Anthropic</div>
+    <h1 data-i18n-html="hero-h1">PICK THE<br><span class="accent">RIGHT</span><br>MODEL.</h1>
+    <p class="hero-sub" data-i18n-html="hero-sub">
       Not every task needs the biggest brain in the room.<br>
       <strong>Over-selecting wastes cost, time, and tokens.</strong><br>
       Under-selecting fails the job. The skill is knowing which is which.
@@ -716,7 +754,7 @@
   <div class="warning-banner">
     <div class="warning-box">
       <div class="warning-icon">⚠</div>
-      <div class="warning-text">
+      <div class="warning-text" data-i18n-html="warning-text">
         <strong>COMMON MISTAKE:</strong> Defaulting to Opus for every task is like hiring a neurosurgeon to change a lightbulb.
         You're paying 15–30× more, waiting longer, and the result is the same.
         <strong>Model selection is a professional skill.</strong> This guide trains that instinct.
@@ -726,27 +764,27 @@
 
   <!-- ── MODEL CARDS ── -->
   <div class="section">
-    <div class="section-label"><span>01</span> The Three Tiers</div>
+    <div class="section-label"><span>01</span> <span data-i18n="section-01">The Three Tiers</span></div>
     <div class="model-grid">
 
       <!-- HAIKU -->
       <div class="model-card haiku-card">
         <div class="model-badge">
           <div class="model-dot"></div>
-          <span style="font-size:11px;letter-spacing:0.12em;color:var(--haiku-col);text-transform:uppercase">Tier 1 · Speed</span>
+          <span data-i18n="haiku-tier" style="font-size:11px;letter-spacing:0.12em;color:var(--haiku-col);text-transform:uppercase">Tier 1 · Speed</span>
         </div>
         <div class="model-name">Haiku</div>
         <div class="model-versions">claude-haiku-4-5 · claude-haiku-4-7</div>
-        <div class="model-tagline">"The sprinter. Blink-fast, cost-effective, capable enough for the everyday."</div>
+        <div class="model-tagline" data-i18n="haiku-tagline">"The sprinter. Blink-fast, cost-effective, capable enough for the everyday."</div>
 
-        <div class="stat-row"><span class="stat-label">Speed</span><span class="stat-value">⚡⚡⚡ Fastest</span></div>
-        <div class="stat-row"><span class="stat-label">Cost</span><span class="stat-value">$ (Lowest)</span></div>
-        <div class="stat-row"><span class="stat-label">Reasoning Depth</span><span class="stat-value">Moderate</span></div>
-        <div class="stat-row"><span class="stat-label">Context Window</span><span class="stat-value">200K tokens</span></div>
-        <div class="stat-row"><span class="stat-label">Best For</span><span class="stat-value">Classify · Extract · Route</span></div>
+        <div class="stat-row"><span class="stat-label" data-i18n="stat-label-speed">Speed</span><span class="stat-value" data-i18n="haiku-stat-speed-val">⚡⚡⚡ Fastest</span></div>
+        <div class="stat-row"><span class="stat-label" data-i18n="stat-label-cost">Cost</span><span class="stat-value" data-i18n="haiku-stat-cost-val">$ (Lowest)</span></div>
+        <div class="stat-row"><span class="stat-label" data-i18n="stat-label-reasoning">Reasoning Depth</span><span class="stat-value" data-i18n="haiku-stat-reasoning-val">Moderate</span></div>
+        <div class="stat-row"><span class="stat-label" data-i18n="stat-label-context">Context Window</span><span class="stat-value">200K tokens</span></div>
+        <div class="stat-row"><span class="stat-label" data-i18n="stat-label-best">Best For</span><span class="stat-value" data-i18n="haiku-stat-best-val">Classify · Extract · Route</span></div>
 
         <div class="speed-bar-wrap">
-          <div class="speed-bar-label">Relative Throughput</div>
+          <div class="speed-bar-label" data-i18n="speed-bar-label">Relative Throughput</div>
           <div class="speed-bar-track"><div class="speed-bar-fill"></div></div>
         </div>
       </div>
@@ -755,20 +793,20 @@
       <div class="model-card sonnet-card">
         <div class="model-badge">
           <div class="model-dot"></div>
-          <span style="font-size:11px;letter-spacing:0.12em;color:var(--sonnet-col);text-transform:uppercase">Tier 2 · Balance ★ Default</span>
+          <span data-i18n="sonnet-tier" style="font-size:11px;letter-spacing:0.12em;color:var(--sonnet-col);text-transform:uppercase">Tier 2 · Balance ★ Default</span>
         </div>
         <div class="model-name">Sonnet</div>
         <div class="model-versions">claude-sonnet-4-6 · claude-sonnet-4-7</div>
-        <div class="model-tagline">"The workhorse. Intelligent, versatile, the right answer for most real work."</div>
+        <div class="model-tagline" data-i18n="sonnet-tagline">"The workhorse. Intelligent, versatile, the right answer for most real work."</div>
 
-        <div class="stat-row"><span class="stat-label">Speed</span><span class="stat-value">⚡⚡ Fast</span></div>
-        <div class="stat-row"><span class="stat-label">Cost</span><span class="stat-value">$$ (Mid)</span></div>
-        <div class="stat-row"><span class="stat-label">Reasoning Depth</span><span class="stat-value">Strong</span></div>
-        <div class="stat-row"><span class="stat-label">Context Window</span><span class="stat-value">200K tokens</span></div>
-        <div class="stat-row"><span class="stat-label">Best For</span><span class="stat-value">Code · Analyze · Write</span></div>
+        <div class="stat-row"><span class="stat-label" data-i18n="stat-label-speed">Speed</span><span class="stat-value" data-i18n="sonnet-stat-speed-val">⚡⚡ Fast</span></div>
+        <div class="stat-row"><span class="stat-label" data-i18n="stat-label-cost">Cost</span><span class="stat-value" data-i18n="sonnet-stat-cost-val">$$ (Mid)</span></div>
+        <div class="stat-row"><span class="stat-label" data-i18n="stat-label-reasoning">Reasoning Depth</span><span class="stat-value" data-i18n="sonnet-stat-reasoning-val">Strong</span></div>
+        <div class="stat-row"><span class="stat-label" data-i18n="stat-label-context">Context Window</span><span class="stat-value">200K tokens</span></div>
+        <div class="stat-row"><span class="stat-label" data-i18n="stat-label-best">Best For</span><span class="stat-value" data-i18n="sonnet-stat-best-val">Code · Analyze · Write</span></div>
 
         <div class="speed-bar-wrap">
-          <div class="speed-bar-label">Relative Throughput</div>
+          <div class="speed-bar-label" data-i18n="speed-bar-label">Relative Throughput</div>
           <div class="speed-bar-track"><div class="speed-bar-fill"></div></div>
         </div>
       </div>
@@ -777,20 +815,20 @@
       <div class="model-card opus-card">
         <div class="model-badge">
           <div class="model-dot"></div>
-          <span style="font-size:11px;letter-spacing:0.12em;color:var(--opus-col);text-transform:uppercase">Tier 3 · Intelligence</span>
+          <span data-i18n="opus-tier" style="font-size:11px;letter-spacing:0.12em;color:var(--opus-col);text-transform:uppercase">Tier 3 · Intelligence</span>
         </div>
         <div class="model-name">Opus</div>
         <div class="model-versions">claude-opus-4-6 · claude-opus-4-7</div>
-        <div class="model-tagline">"The strategist. Deep reasoning for genuinely complex, high-stakes challenges."</div>
+        <div class="model-tagline" data-i18n="opus-tagline">"The strategist. Deep reasoning for genuinely complex, high-stakes challenges."</div>
 
-        <div class="stat-row"><span class="stat-label">Speed</span><span class="stat-value">⚡ Slower</span></div>
-        <div class="stat-row"><span class="stat-label">Cost</span><span class="stat-value">$$$$ (Highest)</span></div>
-        <div class="stat-row"><span class="stat-label">Reasoning Depth</span><span class="stat-value">Exceptional</span></div>
-        <div class="stat-row"><span class="stat-label">Context Window</span><span class="stat-value">200K tokens</span></div>
-        <div class="stat-row"><span class="stat-label">Best For</span><span class="stat-value">Research · Strategy · Novel problems</span></div>
+        <div class="stat-row"><span class="stat-label" data-i18n="stat-label-speed">Speed</span><span class="stat-value" data-i18n="opus-stat-speed-val">⚡ Slower</span></div>
+        <div class="stat-row"><span class="stat-label" data-i18n="stat-label-cost">Cost</span><span class="stat-value" data-i18n="opus-stat-cost-val">$$$$ (Highest)</span></div>
+        <div class="stat-row"><span class="stat-label" data-i18n="stat-label-reasoning">Reasoning Depth</span><span class="stat-value" data-i18n="opus-stat-reasoning-val">Exceptional</span></div>
+        <div class="stat-row"><span class="stat-label" data-i18n="stat-label-context">Context Window</span><span class="stat-value">200K tokens</span></div>
+        <div class="stat-row"><span class="stat-label" data-i18n="stat-label-best">Best For</span><span class="stat-value" data-i18n="opus-stat-best-val">Research · Strategy · Novel problems</span></div>
 
         <div class="speed-bar-wrap">
-          <div class="speed-bar-label">Relative Throughput</div>
+          <div class="speed-bar-label" data-i18n="speed-bar-label">Relative Throughput</div>
           <div class="speed-bar-track"><div class="speed-bar-fill"></div></div>
         </div>
       </div>
@@ -800,9 +838,9 @@
 
   <!-- ── CAPABILITY METERS ── -->
   <div class="meter-section">
-    <div class="section-label"><span>02</span> Capability Comparison</div>
-    <div class="meter-title">Where Each Model Shines</div>
-    <div class="meter-sub">Relative performance across key capability dimensions</div>
+    <div class="section-label"><span>02</span> <span data-i18n="section-02">Capability Comparison</span></div>
+    <div class="meter-title" data-i18n="meter-title">Where Each Model Shines</div>
+    <div class="meter-sub" data-i18n="meter-sub">Relative performance across key capability dimensions</div>
 
     <div class="meter-header">
       <div></div>
@@ -815,70 +853,70 @@
     <div id="meter-rows">
 
       <div class="meter-row">
-        <div class="meter-attr">Speed / Latency</div>
+        <div class="meter-attr" data-i18n="attr-speed-latency">Speed / Latency</div>
         <div class="meter-cell"><div class="meter-bar-track"><div class="meter-bar-fill haiku-fill" style="width:96%"></div></div><div class="meter-val haiku-val">96%</div></div>
         <div class="meter-cell"><div class="meter-bar-track"><div class="meter-bar-fill sonnet-fill" style="width:68%"></div></div><div class="meter-val sonnet-val">68%</div></div>
         <div class="meter-cell"><div class="meter-bar-track"><div class="meter-bar-fill opus-fill" style="width:32%"></div></div><div class="meter-val opus-val">32%</div></div>
       </div>
 
       <div class="meter-row">
-        <div class="meter-attr">Cost Efficiency</div>
+        <div class="meter-attr" data-i18n="attr-cost-efficiency">Cost Efficiency</div>
         <div class="meter-cell"><div class="meter-bar-track"><div class="meter-bar-fill haiku-fill" style="width:95%"></div></div><div class="meter-val haiku-val">95%</div></div>
         <div class="meter-cell"><div class="meter-bar-track"><div class="meter-bar-fill sonnet-fill" style="width:65%"></div></div><div class="meter-val sonnet-val">65%</div></div>
         <div class="meter-cell"><div class="meter-bar-track"><div class="meter-bar-fill opus-fill" style="width:18%"></div></div><div class="meter-val opus-val">18%</div></div>
       </div>
 
       <div class="meter-row">
-        <div class="meter-attr">Instruction Following</div>
+        <div class="meter-attr" data-i18n="attr-instruction">Instruction Following</div>
         <div class="meter-cell"><div class="meter-bar-track"><div class="meter-bar-fill haiku-fill" style="width:72%"></div></div><div class="meter-val haiku-val">72%</div></div>
         <div class="meter-cell"><div class="meter-bar-track"><div class="meter-bar-fill sonnet-fill" style="width:88%"></div></div><div class="meter-val sonnet-val">88%</div></div>
         <div class="meter-cell"><div class="meter-bar-track"><div class="meter-bar-fill opus-fill" style="width:95%"></div></div><div class="meter-val opus-val">95%</div></div>
       </div>
 
       <div class="meter-row">
-        <div class="meter-attr">Code Generation</div>
+        <div class="meter-attr" data-i18n="attr-code-gen">Code Generation</div>
         <div class="meter-cell"><div class="meter-bar-track"><div class="meter-bar-fill haiku-fill" style="width:60%"></div></div><div class="meter-val haiku-val">60%</div></div>
         <div class="meter-cell"><div class="meter-bar-track"><div class="meter-bar-fill sonnet-fill" style="width:88%"></div></div><div class="meter-val sonnet-val">88%</div></div>
         <div class="meter-cell"><div class="meter-bar-track"><div class="meter-bar-fill opus-fill" style="width:96%"></div></div><div class="meter-val opus-val">96%</div></div>
       </div>
 
       <div class="meter-row">
-        <div class="meter-attr">Complex Reasoning</div>
+        <div class="meter-attr" data-i18n="attr-complex-reasoning">Complex Reasoning</div>
         <div class="meter-cell"><div class="meter-bar-track"><div class="meter-bar-fill haiku-fill" style="width:42%"></div></div><div class="meter-val haiku-val">42%</div></div>
         <div class="meter-cell"><div class="meter-bar-track"><div class="meter-bar-fill sonnet-fill" style="width:82%"></div></div><div class="meter-val sonnet-val">82%</div></div>
         <div class="meter-cell"><div class="meter-bar-track"><div class="meter-bar-fill opus-fill" style="width:97%"></div></div><div class="meter-val opus-val">97%</div></div>
       </div>
 
       <div class="meter-row">
-        <div class="meter-attr">Creative Writing</div>
+        <div class="meter-attr" data-i18n="attr-creative-writing">Creative Writing</div>
         <div class="meter-cell"><div class="meter-bar-track"><div class="meter-bar-fill haiku-fill" style="width:55%"></div></div><div class="meter-val haiku-val">55%</div></div>
         <div class="meter-cell"><div class="meter-bar-track"><div class="meter-bar-fill sonnet-fill" style="width:84%"></div></div><div class="meter-val sonnet-val">84%</div></div>
         <div class="meter-cell"><div class="meter-bar-track"><div class="meter-bar-fill opus-fill" style="width:96%"></div></div><div class="meter-val opus-val">96%</div></div>
       </div>
 
       <div class="meter-row">
-        <div class="meter-attr">Data Extraction</div>
+        <div class="meter-attr" data-i18n="attr-data-extraction">Data Extraction</div>
         <div class="meter-cell"><div class="meter-bar-track"><div class="meter-bar-fill haiku-fill" style="width:82%"></div></div><div class="meter-val haiku-val">82%</div></div>
         <div class="meter-cell"><div class="meter-bar-track"><div class="meter-bar-fill sonnet-fill" style="width:88%"></div></div><div class="meter-val sonnet-val">88%</div></div>
         <div class="meter-cell"><div class="meter-bar-track"><div class="meter-bar-fill opus-fill" style="width:90%"></div></div><div class="meter-val opus-val">90%</div></div>
       </div>
 
       <div class="meter-row">
-        <div class="meter-attr">Long-doc Analysis</div>
+        <div class="meter-attr" data-i18n="attr-longdoc">Long-doc Analysis</div>
         <div class="meter-cell"><div class="meter-bar-track"><div class="meter-bar-fill haiku-fill" style="width:58%"></div></div><div class="meter-val haiku-val">58%</div></div>
         <div class="meter-cell"><div class="meter-bar-track"><div class="meter-bar-fill sonnet-fill" style="width:84%"></div></div><div class="meter-val sonnet-val">84%</div></div>
         <div class="meter-cell"><div class="meter-bar-track"><div class="meter-bar-fill opus-fill" style="width:96%"></div></div><div class="meter-val opus-val">96%</div></div>
       </div>
 
       <div class="meter-row">
-        <div class="meter-attr">Multi-step Planning</div>
+        <div class="meter-attr" data-i18n="attr-planning">Multi-step Planning</div>
         <div class="meter-cell"><div class="meter-bar-track"><div class="meter-bar-fill haiku-fill" style="width:40%"></div></div><div class="meter-val haiku-val">40%</div></div>
         <div class="meter-cell"><div class="meter-bar-track"><div class="meter-bar-fill sonnet-fill" style="width:78%"></div></div><div class="meter-val sonnet-val">78%</div></div>
         <div class="meter-cell"><div class="meter-bar-track"><div class="meter-bar-fill opus-fill" style="width:97%"></div></div><div class="meter-val opus-val">97%</div></div>
       </div>
 
       <div class="meter-row">
-        <div class="meter-attr">Summarization</div>
+        <div class="meter-attr" data-i18n="attr-summarization">Summarization</div>
         <div class="meter-cell"><div class="meter-bar-track"><div class="meter-bar-fill haiku-fill" style="width:80%"></div></div><div class="meter-val haiku-val">80%</div></div>
         <div class="meter-cell"><div class="meter-bar-track"><div class="meter-bar-fill sonnet-fill" style="width:88%"></div></div><div class="meter-val sonnet-val">88%</div></div>
         <div class="meter-cell"><div class="meter-bar-track"><div class="meter-bar-fill opus-fill" style="width:90%"></div></div><div class="meter-val opus-val">90%</div></div>
@@ -889,11 +927,11 @@
 
   <!-- ── USE CASE MATRIX ── -->
   <div class="section">
-    <div class="section-label"><span>03</span> Task Fit Matrix</div>
+    <div class="section-label"><span>03</span> <span data-i18n="section-03">Task Fit Matrix</span></div>
     <table class="matrix-table">
       <thead>
         <tr>
-          <th>Task</th>
+          <th data-i18n="matrix-th-task">Task</th>
           <th style="color:var(--haiku-col)">Haiku 4.5/4.7</th>
           <th style="color:var(--sonnet-col)">Sonnet 4.6/4.7</th>
           <th style="color:var(--opus-col)">Opus 4.6/4.7</th>
@@ -901,76 +939,76 @@
       </thead>
       <tbody>
         <tr>
-          <td>Classify a support ticket</td>
-          <td><span class="fit-badge fit-best">✓ Best fit</span></td>
-          <td><span class="fit-badge fit-ok">△ Overkill</span></td>
-          <td><span class="fit-badge fit-over">✗ Way overkill</span></td>
+          <td data-i18n="task-classify-ticket">Classify a support ticket</td>
+          <td><span class="fit-badge fit-best" data-i18n="fit-best">✓ Best fit</span></td>
+          <td><span class="fit-badge fit-ok" data-i18n="fit-ok-overkill">△ Overkill</span></td>
+          <td><span class="fit-badge fit-over" data-i18n="fit-way-overkill">✗ Way overkill</span></td>
         </tr>
         <tr>
-          <td>Extract fields from a form/email</td>
-          <td><span class="fit-badge fit-best">✓ Best fit</span></td>
-          <td><span class="fit-badge fit-ok">△ Acceptable</span></td>
-          <td><span class="fit-badge fit-over">✗ Overkill</span></td>
+          <td data-i18n="task-extract-fields">Extract fields from a form/email</td>
+          <td><span class="fit-badge fit-best" data-i18n="fit-best">✓ Best fit</span></td>
+          <td><span class="fit-badge fit-ok" data-i18n="fit-ok-acceptable">△ Acceptable</span></td>
+          <td><span class="fit-badge fit-over" data-i18n="fit-over-overkill">✗ Overkill</span></td>
         </tr>
         <tr>
-          <td>Generate a short FAQ reply</td>
-          <td><span class="fit-badge fit-best">✓ Best fit</span></td>
-          <td><span class="fit-badge fit-ok">△ Acceptable</span></td>
-          <td><span class="fit-badge fit-over">✗ Overkill</span></td>
+          <td data-i18n="task-faq-reply">Generate a short FAQ reply</td>
+          <td><span class="fit-badge fit-best" data-i18n="fit-best">✓ Best fit</span></td>
+          <td><span class="fit-badge fit-ok" data-i18n="fit-ok-acceptable">△ Acceptable</span></td>
+          <td><span class="fit-badge fit-over" data-i18n="fit-over-overkill">✗ Overkill</span></td>
         </tr>
         <tr>
-          <td>Write a feature in Python / JS</td>
-          <td><span class="fit-badge fit-poor">✗ Too shallow</span></td>
-          <td><span class="fit-badge fit-best">✓ Best fit</span></td>
-          <td><span class="fit-badge fit-ok">△ Overkill</span></td>
+          <td data-i18n="task-write-code">Write a feature in Python / JS</td>
+          <td><span class="fit-badge fit-poor" data-i18n="fit-poor-shallow">✗ Too shallow</span></td>
+          <td><span class="fit-badge fit-best" data-i18n="fit-best">✓ Best fit</span></td>
+          <td><span class="fit-badge fit-ok" data-i18n="fit-ok-overkill">△ Overkill</span></td>
         </tr>
         <tr>
-          <td>Summarize a 50-page PDF</td>
-          <td><span class="fit-badge fit-ok">△ Shallow summary</span></td>
-          <td><span class="fit-badge fit-best">✓ Best fit</span></td>
-          <td><span class="fit-badge fit-ok">△ Fine but costly</span></td>
+          <td data-i18n="task-summarize-pdf">Summarize a 50-page PDF</td>
+          <td><span class="fit-badge fit-ok" data-i18n="fit-ok-shallow">△ Shallow summary</span></td>
+          <td><span class="fit-badge fit-best" data-i18n="fit-best">✓ Best fit</span></td>
+          <td><span class="fit-badge fit-ok" data-i18n="fit-ok-costly">△ Fine but costly</span></td>
         </tr>
         <tr>
-          <td>Debug complex distributed code</td>
-          <td><span class="fit-badge fit-poor">✗ Too shallow</span></td>
-          <td><span class="fit-badge fit-best">✓ Best fit</span></td>
-          <td><span class="fit-badge fit-ok">△ If stuck, fine</span></td>
+          <td data-i18n="task-debug-code">Debug complex distributed code</td>
+          <td><span class="fit-badge fit-poor" data-i18n="fit-poor-shallow">✗ Too shallow</span></td>
+          <td><span class="fit-badge fit-best" data-i18n="fit-best">✓ Best fit</span></td>
+          <td><span class="fit-badge fit-ok" data-i18n="fit-ok-if-stuck">△ If stuck, fine</span></td>
         </tr>
         <tr>
-          <td>Draft a business email</td>
-          <td><span class="fit-badge fit-ok">△ OK for simple</span></td>
-          <td><span class="fit-badge fit-best">✓ Best fit</span></td>
-          <td><span class="fit-badge fit-over">✗ Overkill</span></td>
+          <td data-i18n="task-draft-email">Draft a business email</td>
+          <td><span class="fit-badge fit-ok" data-i18n="fit-ok-simple">△ OK for simple</span></td>
+          <td><span class="fit-badge fit-best" data-i18n="fit-best">✓ Best fit</span></td>
+          <td><span class="fit-badge fit-over" data-i18n="fit-over-overkill">✗ Overkill</span></td>
         </tr>
         <tr>
-          <td>Research a new scientific domain</td>
-          <td><span class="fit-badge fit-poor">✗ Insufficient</span></td>
-          <td><span class="fit-badge fit-ok">△ Decent</span></td>
-          <td><span class="fit-badge fit-best">✓ Best fit</span></td>
+          <td data-i18n="task-research-domain">Research a new scientific domain</td>
+          <td><span class="fit-badge fit-poor" data-i18n="fit-poor-insufficient">✗ Insufficient</span></td>
+          <td><span class="fit-badge fit-ok" data-i18n="fit-ok-decent">△ Decent</span></td>
+          <td><span class="fit-badge fit-best" data-i18n="fit-best">✓ Best fit</span></td>
         </tr>
         <tr>
-          <td>Multi-step strategic plan (novel)</td>
-          <td><span class="fit-badge fit-poor">✗ Insufficient</span></td>
-          <td><span class="fit-badge fit-ok">△ Acceptable</span></td>
-          <td><span class="fit-badge fit-best">✓ Best fit</span></td>
+          <td data-i18n="task-strategic-plan">Multi-step strategic plan (novel)</td>
+          <td><span class="fit-badge fit-poor" data-i18n="fit-poor-insufficient">✗ Insufficient</span></td>
+          <td><span class="fit-badge fit-ok" data-i18n="fit-ok-acceptable">△ Acceptable</span></td>
+          <td><span class="fit-badge fit-best" data-i18n="fit-best">✓ Best fit</span></td>
         </tr>
         <tr>
-          <td>Adversarial red-teaming / eval</td>
-          <td><span class="fit-badge fit-poor">✗ Insufficient</span></td>
-          <td><span class="fit-badge fit-ok">△ Partial</span></td>
-          <td><span class="fit-badge fit-best">✓ Best fit</span></td>
+          <td data-i18n="task-red-team">Adversarial red-teaming / eval</td>
+          <td><span class="fit-badge fit-poor" data-i18n="fit-poor-insufficient">✗ Insufficient</span></td>
+          <td><span class="fit-badge fit-ok" data-i18n="fit-ok-partial">△ Partial</span></td>
+          <td><span class="fit-badge fit-best" data-i18n="fit-best">✓ Best fit</span></td>
         </tr>
         <tr>
-          <td>Translate text (common language)</td>
-          <td><span class="fit-badge fit-best">✓ Best fit</span></td>
-          <td><span class="fit-badge fit-ok">△ Overkill</span></td>
-          <td><span class="fit-badge fit-over">✗ Way overkill</span></td>
+          <td data-i18n="task-translate">Translate text (common language)</td>
+          <td><span class="fit-badge fit-best" data-i18n="fit-best">✓ Best fit</span></td>
+          <td><span class="fit-badge fit-ok" data-i18n="fit-ok-overkill">△ Overkill</span></td>
+          <td><span class="fit-badge fit-over" data-i18n="fit-way-overkill">✗ Way overkill</span></td>
         </tr>
         <tr>
-          <td>High-stakes legal/medical reasoning</td>
-          <td><span class="fit-badge fit-poor">✗ Risky</span></td>
-          <td><span class="fit-badge fit-ok">△ Use carefully</span></td>
-          <td><span class="fit-badge fit-best">✓ Best fit</span></td>
+          <td data-i18n="task-legal-medical">High-stakes legal/medical reasoning</td>
+          <td><span class="fit-badge fit-poor" data-i18n="fit-poor-risky">✗ Risky</span></td>
+          <td><span class="fit-badge fit-ok" data-i18n="fit-ok-careful">△ Use carefully</span></td>
+          <td><span class="fit-badge fit-best" data-i18n="fit-best">✓ Best fit</span></td>
         </tr>
       </tbody>
     </table>
@@ -978,24 +1016,24 @@
 
   <!-- ── DECISION FLOW ── -->
   <div class="decision-section">
-    <div class="section-label"><span>04</span> Model Selection Decision Tree</div>
-    <div style="font-family:'Bebas Neue',sans-serif;font-size:28px;letter-spacing:0.05em;margin-bottom:6px">Ask These Questions First</div>
-    <div style="font-size:12px;color:var(--muted);font-style:italic">Work through this before writing a single API call</div>
+    <div class="section-label"><span>04</span> <span data-i18n="section-04">Model Selection Decision Tree</span></div>
+    <div data-i18n="dt-heading" style="font-family:'Bebas Neue',sans-serif;font-size:28px;letter-spacing:0.05em;margin-bottom:6px">Ask These Questions First</div>
+    <div data-i18n="dt-subtitle" style="font-size:12px;color:var(--muted);font-style:italic">Work through this before writing a single API call</div>
 
     <div class="decision-flow">
 
       <div class="decision-node">
-        <div class="decision-q">1 — Is the task well-defined with a clear, narrow output?</div>
+        <div class="decision-q" data-i18n="dq1">1 — Is the task well-defined with a clear, narrow output?</div>
         <div class="decision-branches">
           <div class="branch br-haiku">
             <div class="branch-label">Yes →</div>
-            <div class="branch-ans">Single-step, structured output — classify, extract, translate, route</div>
-            <div class="branch-result">→ Start with HAIKU</div>
+            <div class="branch-ans" data-i18n="dq1-yes-ans">Single-step, structured output — classify, extract, translate, route</div>
+            <div class="branch-result" data-i18n="dq1-yes-result">→ Start with HAIKU</div>
           </div>
           <div class="branch br-sonnet">
             <div class="branch-label">No →</div>
-            <div class="branch-ans">Involves writing, synthesis, reasoning, or multi-step generation</div>
-            <div class="branch-result">→ Continue to Q2</div>
+            <div class="branch-ans" data-i18n="dq1-no-ans">Involves writing, synthesis, reasoning, or multi-step generation</div>
+            <div class="branch-result" data-i18n="dq1-no-result">→ Continue to Q2</div>
           </div>
         </div>
       </div>
@@ -1003,17 +1041,17 @@
       <div class="connector"></div>
 
       <div class="decision-node">
-        <div class="decision-q">2 — Does the task involve novel problem-solving, deep analysis, or genuine uncertainty?</div>
+        <div class="decision-q" data-i18n="dq2">2 — Does the task involve novel problem-solving, deep analysis, or genuine uncertainty?</div>
         <div class="decision-branches">
           <div class="branch br-sonnet">
             <div class="branch-label">No →</div>
-            <div class="branch-ans">Standard coding, writing, summarization, familiar domain work</div>
-            <div class="branch-result">→ Use SONNET</div>
+            <div class="branch-ans" data-i18n="dq2-no-ans">Standard coding, writing, summarization, familiar domain work</div>
+            <div class="branch-result" data-i18n="dq2-no-result">→ Use SONNET</div>
           </div>
           <div class="branch br-opus">
             <div class="branch-label">Yes →</div>
-            <div class="branch-ans">Research, strategic planning, adversarial tasks, hard cross-domain reasoning</div>
-            <div class="branch-result">→ Continue to Q3</div>
+            <div class="branch-ans" data-i18n="dq2-yes-ans">Research, strategic planning, adversarial tasks, hard cross-domain reasoning</div>
+            <div class="branch-result" data-i18n="dq2-yes-result">→ Continue to Q3</div>
           </div>
         </div>
       </div>
@@ -1021,17 +1059,17 @@
       <div class="connector"></div>
 
       <div class="decision-node">
-        <div class="decision-q">3 — Did Sonnet already fail, or is the task high-stakes enough to justify 15–30× cost?</div>
+        <div class="decision-q" data-i18n="dq3">3 — Did Sonnet already fail, or is the task high-stakes enough to justify 15–30× cost?</div>
         <div class="decision-branches">
           <div class="branch br-sonnet">
             <div class="branch-label">No →</div>
-            <div class="branch-ans">Try Sonnet first. You might be surprised.</div>
-            <div class="branch-result">→ Use SONNET, escalate if needed</div>
+            <div class="branch-ans" data-i18n="dq3-no-ans">Try Sonnet first. You might be surprised.</div>
+            <div class="branch-result" data-i18n="dq3-no-result">→ Use SONNET, escalate if needed</div>
           </div>
           <div class="branch br-opus">
             <div class="branch-label">Yes →</div>
-            <div class="branch-ans">Sonnet failed, or the stakes clearly justify the cost and wait time</div>
-            <div class="branch-result">→ Use OPUS</div>
+            <div class="branch-ans" data-i18n="dq3-yes-ans">Sonnet failed, or the stakes clearly justify the cost and wait time</div>
+            <div class="branch-result" data-i18n="dq3-yes-result">→ Use OPUS</div>
           </div>
         </div>
       </div>
@@ -1041,44 +1079,44 @@
 
   <!-- ── OVERKILL EXAMPLES ── -->
   <div class="section">
-    <div class="section-label"><span>05</span> Overkill in the Wild</div>
-    <div style="font-family:'Bebas Neue',sans-serif;font-size:28px;letter-spacing:0.05em;margin-bottom:6px">Real Examples · Bad vs Good Choice</div>
-    <div style="font-size:12px;color:var(--muted);font-style:italic;margin-bottom:0">See the pattern. Build the instinct.</div>
+    <div class="section-label"><span>05</span> <span data-i18n="section-05">Overkill in the Wild</span></div>
+    <div data-i18n="overkill-heading" style="font-family:'Bebas Neue',sans-serif;font-size:28px;letter-spacing:0.05em;margin-bottom:6px">Real Examples · Bad vs Good Choice</div>
+    <div data-i18n="overkill-subtitle" style="font-size:12px;color:var(--muted);font-style:italic;margin-bottom:0">See the pattern. Build the instinct.</div>
     <div class="overkill-grid">
 
       <div class="overkill-card">
-        <div class="ok-header"><div class="ok-emoji">🎫</div><div class="ok-title">Support Ticket Routing</div></div>
-        <div class="ok-scenario">"Classify this customer message as billing, technical, or general inquiry."</div>
+        <div class="ok-header"><div class="ok-emoji">🎫</div><div class="ok-title" data-i18n="ok-title-ticket">Support Ticket Routing</div></div>
+        <div class="ok-scenario" data-i18n="ok-scenario-ticket">"Classify this customer message as billing, technical, or general inquiry."</div>
         <div class="ok-row">
-          <div class="ok-col ok-bad"><div class="ok-col-label">❌ Over-selected</div>Using <strong>Opus</strong> — $0.015/1K tokens, 8 sec latency, 30× more expensive. The nuance here is zero.</div>
-          <div class="ok-col ok-good"><div class="ok-col-label">✓ Right choice</div>Using <strong>Haiku</strong> — $0.00025/1K tokens, under 1 sec. Perfect for high-volume classification.</div>
+          <div class="ok-col ok-bad"><div class="ok-col-label" data-i18n="ok-bad-label-ticket">❌ Over-selected</div><span data-i18n-html="ok-bad-ticket">Using <strong>Opus</strong> — $0.015/1K tokens, 8 sec latency, 30× more expensive. The nuance here is zero.</span></div>
+          <div class="ok-col ok-good"><div class="ok-col-label" data-i18n="ok-good-label-ticket">✓ Right choice</div><span data-i18n-html="ok-good-ticket">Using <strong>Haiku</strong> — $0.00025/1K tokens, under 1 sec. Perfect for high-volume classification.</span></div>
         </div>
       </div>
 
       <div class="overkill-card">
-        <div class="ok-header"><div class="ok-emoji">📧</div><div class="ok-title">Email Reply Draft</div></div>
-        <div class="ok-scenario">"Write a polite 3-sentence reply to this meeting request."</div>
+        <div class="ok-header"><div class="ok-emoji">📧</div><div class="ok-title" data-i18n="ok-title-email">Email Reply Draft</div></div>
+        <div class="ok-scenario" data-i18n="ok-scenario-email">"Write a polite 3-sentence reply to this meeting request."</div>
         <div class="ok-row">
-          <div class="ok-col ok-bad"><div class="ok-col-label">❌ Over-selected</div>Using <strong>Opus</strong> — maximal reasoning applied to a 3-sentence social task. Same output, 20× the wait.</div>
-          <div class="ok-col ok-good"><div class="ok-col-label">✓ Right choice</div><strong>Haiku or Sonnet</strong> — Haiku for templated, Sonnet if tone nuance matters. Both are instant.</div>
+          <div class="ok-col ok-bad"><div class="ok-col-label" data-i18n="ok-bad-label-email">❌ Over-selected</div><span data-i18n-html="ok-bad-email">Using <strong>Opus</strong> — maximal reasoning applied to a 3-sentence social task. Same output, 20× the wait.</span></div>
+          <div class="ok-col ok-good"><div class="ok-col-label" data-i18n="ok-good-label-email">✓ Right choice</div><span data-i18n-html="ok-good-email"><strong>Haiku or Sonnet</strong> — Haiku for templated, Sonnet if tone nuance matters. Both are instant.</span></div>
         </div>
       </div>
 
       <div class="overkill-card">
-        <div class="ok-header"><div class="ok-emoji">🐛</div><div class="ok-title">Debugging a Function</div></div>
-        <div class="ok-scenario">"This Python function is throwing a KeyError. What's wrong?"</div>
+        <div class="ok-header"><div class="ok-emoji">🐛</div><div class="ok-title" data-i18n="ok-title-debug">Debugging a Function</div></div>
+        <div class="ok-scenario" data-i18n="ok-scenario-debug">"This Python function is throwing a KeyError. What's wrong?"</div>
         <div class="ok-row">
-          <div class="ok-col ok-bad"><div class="ok-col-label">❌ Under-selected</div>Using <strong>Haiku</strong> — too shallow for code reasoning, may miss the root cause in non-trivial codebases.</div>
-          <div class="ok-col ok-good"><div class="ok-col-label">✓ Right choice</div><strong>Sonnet</strong> — strong code reasoning, fast, cost-efficient. Opus only if it involves deep system-wide logic.</div>
+          <div class="ok-col ok-bad"><div class="ok-col-label" data-i18n="ok-bad-label-debug">❌ Under-selected</div><span data-i18n-html="ok-bad-debug">Using <strong>Haiku</strong> — too shallow for code reasoning, may miss the root cause in non-trivial codebases.</span></div>
+          <div class="ok-col ok-good"><div class="ok-col-label" data-i18n="ok-good-label-debug">✓ Right choice</div><span data-i18n-html="ok-good-debug"><strong>Sonnet</strong> — strong code reasoning, fast, cost-efficient. Opus only if it involves deep system-wide logic.</span></div>
         </div>
       </div>
 
       <div class="overkill-card">
-        <div class="ok-header"><div class="ok-emoji">🔬</div><div class="ok-title">Novel Research Synthesis</div></div>
-        <div class="ok-scenario">"Synthesize the latest findings on mRNA vaccine platforms and identify open research questions."</div>
+        <div class="ok-header"><div class="ok-emoji">🔬</div><div class="ok-title" data-i18n="ok-title-research">Novel Research Synthesis</div></div>
+        <div class="ok-scenario" data-i18n="ok-scenario-research">"Synthesize the latest findings on mRNA vaccine platforms and identify open research questions."</div>
         <div class="ok-row">
-          <div class="ok-col ok-bad"><div class="ok-col-label">❌ Under-selected</div>Using <strong>Haiku or Sonnet</strong> — may miss nuance, conflate findings, or fail to identify genuine gaps in a complex field.</div>
-          <div class="ok-col ok-good"><div class="ok-col-label">✓ Right choice</div><strong>Opus</strong> — this is exactly where Opus earns its price. Deep domain reasoning, multi-source synthesis.</div>
+          <div class="ok-col ok-bad"><div class="ok-col-label" data-i18n="ok-bad-label-research">❌ Under-selected</div><span data-i18n-html="ok-bad-research">Using <strong>Haiku or Sonnet</strong> — may miss nuance, conflate findings, or fail to identify genuine gaps in a complex field.</span></div>
+          <div class="ok-col ok-good"><div class="ok-col-label" data-i18n="ok-good-label-research">✓ Right choice</div><span data-i18n-html="ok-good-research"><strong>Opus</strong> — this is exactly where Opus earns its price. Deep domain reasoning, multi-source synthesis.</span></div>
         </div>
       </div>
 
@@ -1087,9 +1125,9 @@
 
   <!-- ── COST VISUAL ── -->
   <div class="cost-bar-section">
-    <div class="section-label"><span>06</span> The Cost Reality</div>
-    <div style="font-family:'Bebas Neue',sans-serif;font-size:28px;letter-spacing:0.05em;margin-bottom:6px">Relative Cost Per Million Tokens</div>
-    <div style="font-size:12px;color:var(--muted);font-style:italic">Illustrative ratios — exact pricing at anthropic.com/pricing</div>
+    <div class="section-label"><span>06</span> <span data-i18n="section-06">The Cost Reality</span></div>
+    <div data-i18n="cost-heading" style="font-family:'Bebas Neue',sans-serif;font-size:28px;letter-spacing:0.05em;margin-bottom:6px">Relative Cost Per Million Tokens</div>
+    <div data-i18n="cost-subtitle" style="font-size:12px;color:var(--muted);font-style:italic">Illustrative ratios — exact pricing at anthropic.com/pricing</div>
 
     <div class="cost-visual">
       <div class="cost-cell haiku-cost">
@@ -1101,9 +1139,9 @@
           <span class="coin" style="color:var(--haiku-col)">●</span>
           <span class="coin" style="color:var(--haiku-col)">●</span>
         </div>
-        <div class="cost-label">Lowest input cost</div>
+        <div class="cost-label" data-i18n="cost-label-haiku">Lowest input cost</div>
         <div class="cost-relative" style="color:var(--haiku-col)">1× Baseline</div>
-        <div style="font-size:11px;color:var(--muted);margin-top:8px;font-style:italic">High-volume tasks — batch at scale</div>
+        <div data-i18n="cost-note-haiku" style="font-size:11px;color:var(--muted);margin-top:8px;font-style:italic">High-volume tasks — batch at scale</div>
       </div>
 
       <div class="cost-cell sonnet-cost">
@@ -1115,9 +1153,9 @@
           <span class="coin" style="color:var(--sonnet-col)">●</span>
           <span class="coin" style="color:var(--sonnet-col)">●</span>
         </div>
-        <div class="cost-label">Mid-range cost</div>
+        <div class="cost-label" data-i18n="cost-label-sonnet">Mid-range cost</div>
         <div class="cost-relative" style="color:var(--sonnet-col)">~5–8× Haiku</div>
-        <div style="font-size:11px;color:var(--muted);margin-top:8px;font-style:italic">Production workloads — daily use</div>
+        <div data-i18n="cost-note-sonnet" style="font-size:11px;color:var(--muted);margin-top:8px;font-style:italic">Production workloads — daily use</div>
       </div>
 
       <div class="cost-cell opus-cost">
@@ -1129,16 +1167,16 @@
           <span class="coin active" style="color:var(--opus-col)">●</span>
           <span class="coin active" style="color:var(--opus-col)">●</span>
         </div>
-        <div class="cost-label">Premium cost</div>
+        <div class="cost-label" data-i18n="cost-label-opus">Premium cost</div>
         <div class="cost-relative" style="color:var(--opus-col)">~15–30× Haiku</div>
-        <div style="font-size:11px;color:var(--muted);margin-top:8px;font-style:italic">Strategic tasks — use intentionally</div>
+        <div data-i18n="cost-note-opus" style="font-size:11px;color:var(--muted);margin-top:8px;font-style:italic">Strategic tasks — use intentionally</div>
       </div>
     </div>
 
     <!-- SCENARIO NOTE -->
     <div style="margin-top:24px;padding:20px 24px;background:var(--surface);border:1px solid var(--border);">
-      <div style="font-size:11px;letter-spacing:0.15em;text-transform:uppercase;color:var(--muted);margin-bottom:10px">💡 Quick Math</div>
-      <div style="font-size:13px;color:var(--text);line-height:1.8">
+      <div data-i18n="quick-math-heading" style="font-size:11px;letter-spacing:0.15em;text-transform:uppercase;color:var(--muted);margin-bottom:10px">💡 Quick Math</div>
+      <div data-i18n-html="quick-math" style="font-size:13px;color:var(--text);line-height:1.8">
         Processing <strong>10,000 support tickets/day</strong> with Opus ≈ <span style="color:var(--danger)">$1,500/day</span><br>
         Processing <strong>10,000 support tickets/day</strong> with Haiku ≈ <span style="color:var(--ok)">$25/day</span><br>
         <span style="color:var(--muted);font-style:italic;font-size:12px">Same classification quality. 60× cost difference.</span>
@@ -1148,13 +1186,13 @@
 
   <!-- ── CHEAT SHEET ── -->
   <div class="section">
-    <div class="section-label"><span>07</span> The Cheat Sheet</div>
+    <div class="section-label"><span>07</span> <span data-i18n="section-07">The Cheat Sheet</span></div>
     <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:2px;background:var(--border)">
 
       <div style="background:var(--surface);padding:28px 24px;border-top:3px solid var(--haiku-col)">
         <div style="font-family:'Bebas Neue',sans-serif;font-size:32px;color:var(--haiku-col);letter-spacing:0.05em;margin-bottom:16px">HAIKU</div>
-        <div style="font-size:12px;color:var(--muted);margin-bottom:14px;font-style:italic">Reach for Haiku when…</div>
-        <div style="font-size:12px;color:var(--text);line-height:2">
+        <div data-i18n="cheat-haiku-when" style="font-size:12px;color:var(--muted);margin-bottom:14px;font-style:italic">Reach for Haiku when…</div>
+        <div data-i18n-html="cheat-haiku-bullets" style="font-size:12px;color:var(--text);line-height:2">
           ↳ Task has a single correct output<br>
           ↳ High volume (1K+ calls/day)<br>
           ↳ Speed &lt; 1 sec is needed<br>
@@ -1166,8 +1204,8 @@
 
       <div style="background:var(--surface);padding:28px 24px;border-top:3px solid var(--sonnet-col)">
         <div style="font-family:'Bebas Neue',sans-serif;font-size:32px;color:var(--sonnet-col);letter-spacing:0.05em;margin-bottom:16px">SONNET</div>
-        <div style="font-size:12px;color:var(--muted);margin-bottom:14px;font-style:italic">Reach for Sonnet when…</div>
-        <div style="font-size:12px;color:var(--text);line-height:2">
+        <div data-i18n="cheat-sonnet-when" style="font-size:12px;color:var(--muted);margin-bottom:14px;font-style:italic">Reach for Sonnet when…</div>
+        <div data-i18n-html="cheat-sonnet-bullets" style="font-size:12px;color:var(--text);line-height:2">
           ↳ Code generation or debugging<br>
           ↳ Writing with real quality bar<br>
           ↳ Summarizing long documents<br>
@@ -1179,8 +1217,8 @@
 
       <div style="background:var(--surface);padding:28px 24px;border-top:3px solid var(--opus-col)">
         <div style="font-family:'Bebas Neue',sans-serif;font-size:32px;color:var(--opus-col);letter-spacing:0.05em;margin-bottom:16px">OPUS</div>
-        <div style="font-size:12px;color:var(--muted);margin-bottom:14px;font-style:italic">Reach for Opus when…</div>
-        <div style="font-size:12px;color:var(--text);line-height:2">
+        <div data-i18n="cheat-opus-when" style="font-size:12px;color:var(--muted);margin-bottom:14px;font-style:italic">Reach for Opus when…</div>
+        <div data-i18n-html="cheat-opus-bullets" style="font-size:12px;color:var(--text);line-height:2">
           ↳ Sonnet already failed the task<br>
           ↳ Genuinely novel problem space<br>
           ↳ High-stakes: medical, legal, safety<br>
@@ -1195,57 +1233,57 @@
 
   <!-- ── COWORK SECTION ── -->
   <div class="section" id="cowork-section">
-    <div class="section-label"><span>08</span> Claude Cowork — Desktop App</div>
-    <div style="font-family:'Bebas Neue',sans-serif;font-size:28px;letter-spacing:0.05em;margin-bottom:6px">Model Selection Inside Cowork</div>
-    <div style="font-size:12px;color:var(--muted);font-style:italic;margin-bottom:32px">Cowork is Anthropic's desktop tool for non-developers to automate file and task management. It uses a slightly different model lineup — the same instinct applies.</div>
+    <div class="section-label"><span>08</span> <span data-i18n="section-08">Claude Cowork — Desktop App</span></div>
+    <div data-i18n="cowork-heading" style="font-family:'Bebas Neue',sans-serif;font-size:28px;letter-spacing:0.05em;margin-bottom:6px">Model Selection Inside Cowork</div>
+    <div data-i18n="cowork-intro" style="font-size:12px;color:var(--muted);font-style:italic;margin-bottom:32px">Cowork is Anthropic's desktop tool for non-developers to automate file and task management. It uses a slightly different model lineup — the same instinct applies.</div>
 
     <!-- Cowork model trio -->
     <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:2px;background:var(--border);margin-bottom:32px">
 
       <div style="background:var(--surface);padding:28px 24px;border-top:3px solid var(--haiku-col);position:relative">
-        <div style="font-size:10px;letter-spacing:0.2em;text-transform:uppercase;color:var(--haiku-col);margin-bottom:10px">Cowork · Speed</div>
+        <div data-i18n="cowork-haiku-tier" style="font-size:10px;letter-spacing:0.2em;text-transform:uppercase;color:var(--haiku-col);margin-bottom:10px">Cowork · Speed</div>
         <div style="font-family:'Bebas Neue',sans-serif;font-size:34px;color:var(--haiku-col);letter-spacing:0.05em;line-height:1">Haiku 4.6</div>
-        <div style="font-size:11px;color:var(--muted);margin:8px 0 16px;font-style:italic">Fastest, lowest usage cost</div>
-        <div style="font-size:12px;color:var(--text);line-height:2">
+        <div data-i18n="cowork-haiku-sub" style="font-size:11px;color:var(--muted);margin:8px 0 16px;font-style:italic">Fastest, lowest usage cost</div>
+        <div data-i18n-html="cowork-haiku-bullets" style="font-size:12px;color:var(--text);line-height:2">
           ↳ Quick file renames &amp; sorts<br>
           ↳ Simple form extraction<br>
           ↳ Batch repetitive tasks<br>
           ↳ Fast lookups &amp; summaries<br>
           ↳ High-volume automation
         </div>
-        <div style="margin-top:18px;padding:10px 14px;background:rgba(79,195,247,0.06);border:1px solid rgba(79,195,247,0.15);font-size:11px;color:var(--muted);line-height:1.6">
+        <div data-i18n="cowork-haiku-note" style="margin-top:18px;padding:10px 14px;background:rgba(79,195,247,0.06);border:1px solid rgba(79,195,247,0.15);font-size:11px;color:var(--muted);line-height:1.6">
           💡 Cowork-specific note: Haiku 4.6 is newer than the Haiku 4.5 in the API — same tier, slightly improved.
         </div>
       </div>
 
       <div style="background:var(--surface);padding:28px 24px;border-top:3px solid var(--sonnet-col);position:relative">
-        <div style="font-size:10px;letter-spacing:0.2em;text-transform:uppercase;color:var(--sonnet-col);margin-bottom:10px">Cowork · Default ★</div>
+        <div data-i18n="cowork-sonnet-tier" style="font-size:10px;letter-spacing:0.2em;text-transform:uppercase;color:var(--sonnet-col);margin-bottom:10px">Cowork · Default ★</div>
         <div style="font-family:'Bebas Neue',sans-serif;font-size:34px;color:var(--sonnet-col);letter-spacing:0.05em;line-height:1">Sonnet 4.6</div>
-        <div style="font-size:11px;color:var(--muted);margin:8px 0 16px;font-style:italic">Balanced — your everyday Cowork model</div>
-        <div style="font-size:12px;color:var(--text);line-height:2">
+        <div data-i18n="cowork-sonnet-sub" style="font-size:11px;color:var(--muted);margin:8px 0 16px;font-style:italic">Balanced — your everyday Cowork model</div>
+        <div data-i18n-html="cowork-sonnet-bullets" style="font-size:12px;color:var(--text);line-height:2">
           ↳ Document drafting &amp; editing<br>
           ↳ Spreadsheet creation<br>
           ↳ Multi-step file workflows<br>
           ↳ Email &amp; report generation<br>
           ↳ Vision + computer use tasks
         </div>
-        <div style="margin-top:18px;padding:10px 14px;background:rgba(167,139,250,0.06);border:1px solid rgba(167,139,250,0.15);font-size:11px;color:var(--muted);line-height:1.6">
+        <div data-i18n="cowork-sonnet-note" style="margin-top:18px;padding:10px 14px;background:rgba(167,139,250,0.06);border:1px solid rgba(167,139,250,0.15);font-size:11px;color:var(--muted);line-height:1.6">
           💡 Start here for virtually all Cowork tasks. Same model as the API default — consistent behaviour.
         </div>
       </div>
 
       <div style="background:var(--surface);padding:28px 24px;border-top:3px solid var(--opus-col);position:relative">
-        <div style="font-size:10px;letter-spacing:0.2em;text-transform:uppercase;color:var(--opus-col);margin-bottom:10px">Cowork · Power</div>
+        <div data-i18n="cowork-opus-tier" style="font-size:10px;letter-spacing:0.2em;text-transform:uppercase;color:var(--opus-col);margin-bottom:10px">Cowork · Power</div>
         <div style="font-family:'Bebas Neue',sans-serif;font-size:34px;color:var(--opus-col);letter-spacing:0.05em;line-height:1">Opus 4.7</div>
-        <div style="font-size:11px;color:var(--muted);margin:8px 0 16px;font-style:italic">Most capable — deepest reasoning</div>
-        <div style="font-size:12px;color:var(--text);line-height:2">
+        <div data-i18n="cowork-opus-sub" style="font-size:11px;color:var(--muted);margin:8px 0 16px;font-style:italic">Most capable — deepest reasoning</div>
+        <div data-i18n-html="cowork-opus-bullets" style="font-size:12px;color:var(--text);line-height:2">
           ↳ Complex multi-doc synthesis<br>
           ↳ Long research &amp; analysis tasks<br>
           ↳ Tasks Sonnet got wrong<br>
           ↳ High-stakes deliverables<br>
           ↳ Novel, open-ended problems
         </div>
-        <div style="margin-top:18px;padding:10px 14px;background:rgba(249,168,37,0.06);border:1px solid rgba(249,168,37,0.15);font-size:11px;color:var(--muted);line-height:1.6">
+        <div data-i18n="cowork-opus-note" style="margin-top:18px;padding:10px 14px;background:rgba(249,168,37,0.06);border:1px solid rgba(249,168,37,0.15);font-size:11px;color:var(--muted);line-height:1.6">
           💡 Cowork uses Opus 4.7 (one step newer than API default Opus 4.6). Reserve for complex tasks only.
         </div>
       </div>
@@ -1256,35 +1294,35 @@
     <div style="background:var(--surface);border:1px solid var(--border);padding:28px 32px;display:grid;grid-template-columns:auto 1fr;gap:24px;align-items:start;margin-bottom:32px">
       <div style="font-size:36px;line-height:1">🧠</div>
       <div>
-        <div style="font-family:'Bebas Neue',sans-serif;font-size:22px;letter-spacing:0.05em;color:var(--text);margin-bottom:8px">Adaptive Thinking — Cowork's Smart Toggle</div>
-        <div style="font-size:13px;color:var(--muted);line-height:1.8;margin-bottom:12px">
+        <div data-i18n="adaptive-title" style="font-family:'Bebas Neue',sans-serif;font-size:22px;letter-spacing:0.05em;color:var(--text);margin-bottom:8px">Adaptive Thinking — Cowork's Smart Toggle</div>
+        <div data-i18n-html="adaptive-body" style="font-size:13px;color:var(--muted);line-height:1.8;margin-bottom:12px">
           Cowork includes an <strong style="color:var(--text)">Adaptive Thinking</strong> feature (available on Sonnet 4.6 and Opus 4.6/4.7).
           When enabled, Claude automatically calibrates <em>how much it thinks</em> based on task complexity —
           simple questions get fast answers, complex ones get deeper reasoning, without you micromanaging it.
         </div>
         <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
           <div style="padding:12px 16px;background:rgba(102,187,106,0.07);border:1px solid rgba(102,187,106,0.2);font-size:12px;color:#a5d6a7;line-height:1.7">
-            <div style="font-size:10px;text-transform:uppercase;letter-spacing:0.15em;margin-bottom:6px;opacity:0.7">✓ Turn it ON when</div>
-            You're unsure how complex the task is<br>
+            <div data-i18n="adaptive-on-label" style="font-size:10px;text-transform:uppercase;letter-spacing:0.15em;margin-bottom:6px;opacity:0.7">✓ Turn it ON when</div>
+            <span data-i18n-html="adaptive-on-body">You're unsure how complex the task is<br>
             You want the model to self-regulate<br>
-            Tasks vary in depth within a session
+            Tasks vary in depth within a session</span>
           </div>
           <div style="padding:12px 16px;background:rgba(239,83,80,0.07);border:1px solid rgba(239,83,80,0.2);font-size:12px;color:#ef9a9a;line-height:1.7">
-            <div style="font-size:10px;text-transform:uppercase;letter-spacing:0.15em;margin-bottom:6px;opacity:0.7">⚠ Watch out</div>
-            It still uses more tokens than Haiku<br>
+            <div data-i18n="adaptive-warn-label" style="font-size:10px;text-transform:uppercase;letter-spacing:0.15em;margin-bottom:6px;opacity:0.7">⚠ Watch out</div>
+            <span data-i18n-html="adaptive-warn-body">It still uses more tokens than Haiku<br>
             Not a reason to always pick Opus<br>
-            Model tier still matters — start with Sonnet
+            Model tier still matters — start with Sonnet</span>
           </div>
         </div>
       </div>
     </div>
 
     <!-- Cowork vs API comparison -->
-    <div style="font-family:'Bebas Neue',sans-serif;font-size:20px;letter-spacing:0.05em;color:var(--text);margin-bottom:16px">Cowork vs API — Model Lineup at a Glance</div>
+    <div data-i18n="cowork-compare-heading" style="font-family:'Bebas Neue',sans-serif;font-size:20px;letter-spacing:0.05em;color:var(--text);margin-bottom:16px">Cowork vs API — Model Lineup at a Glance</div>
     <table class="matrix-table">
       <thead>
         <tr>
-          <th>Tier</th>
+          <th data-i18n="cowork-th-tier">Tier</th>
           <th style="color:var(--haiku-col)">Haiku</th>
           <th style="color:var(--sonnet-col)">Sonnet</th>
           <th style="color:var(--opus-col)">Opus</th>
@@ -1292,36 +1330,36 @@
       </thead>
       <tbody>
         <tr>
-          <td>claude.ai / API</td>
-          <td style="color:var(--haiku-col)">Haiku 4.5</td>
-          <td style="color:var(--sonnet-col)">Sonnet 4.6</td>
-          <td style="color:var(--opus-col)">Opus 4.6</td>
+          <td data-i18n="cowork-row-api">claude.ai / API</td>
+          <td data-i18n="cowork-col-haiku-api" style="color:var(--haiku-col)">Haiku 4.5</td>
+          <td data-i18n="cowork-col-sonnet-api" style="color:var(--sonnet-col)">Sonnet 4.6</td>
+          <td data-i18n="cowork-col-opus-api" style="color:var(--opus-col)">Opus 4.6</td>
         </tr>
         <tr>
-          <td>Cowork (desktop)</td>
-          <td style="color:var(--haiku-col)">Haiku 4.6 ✦</td>
-          <td style="color:var(--sonnet-col)">Sonnet 4.6</td>
-          <td style="color:var(--opus-col)">Opus 4.7 ✦</td>
+          <td data-i18n="cowork-row-cowork">Cowork (desktop)</td>
+          <td data-i18n="cowork-col-haiku-cw" style="color:var(--haiku-col)">Haiku 4.6 ✦</td>
+          <td data-i18n="cowork-col-sonnet-cw" style="color:var(--sonnet-col)">Sonnet 4.6</td>
+          <td data-i18n="cowork-col-opus-cw" style="color:var(--opus-col)">Opus 4.7 ✦</td>
         </tr>
         <tr>
-          <td style="color:var(--muted);font-size:11px">Selection principle</td>
-          <td style="color:var(--muted);font-size:11px">Fast, simple tasks</td>
-          <td style="color:var(--muted);font-size:11px">Default — most work</td>
-          <td style="color:var(--muted);font-size:11px">Complex only</td>
+          <td data-i18n="cowork-row-principle" style="color:var(--muted);font-size:11px">Selection principle</td>
+          <td data-i18n="cowork-principle-haiku" style="color:var(--muted);font-size:11px">Fast, simple tasks</td>
+          <td data-i18n="cowork-principle-sonnet" style="color:var(--muted);font-size:11px">Default — most work</td>
+          <td data-i18n="cowork-principle-opus" style="color:var(--muted);font-size:11px">Complex only</td>
         </tr>
       </tbody>
     </table>
-    <div style="font-size:11px;color:var(--muted);margin-top:10px;font-style:italic">✦ Cowork ships with newer point versions of Haiku and Opus. The tier logic and selection instinct remains identical.</div>
+    <div data-i18n="cowork-footnote" style="font-size:11px;color:var(--muted);margin-top:10px;font-style:italic">✦ Cowork ships with newer point versions of Haiku and Opus. The tier logic and selection instinct remains identical.</div>
 
   </div>
 
   <!-- ── FOOTER ── -->
   <div class="footer">
-    <div class="footer-msg">
+    <div class="footer-msg" data-i18n-html="footer-msg">
       <strong>The best engineers know when to use a scalpel vs a sledgehammer.</strong><br>
       Model selection isn't about picking the most powerful tool — it's about matching the right tool to the job. Over-engineering wastes resources. Under-engineering fails users. Build the instinct to tell the difference.
     </div>
-    <div class="footer-tag">
+    <div class="footer-tag" data-i18n-html="footer-tag">
       Claude Model Guide<br>
       Haiku · Sonnet · Opus<br>
       claude.ai · Cowork<br>
@@ -1329,11 +1367,414 @@
     </div>
   </div>
 
+  <button class="lang-toggle" id="langToggle">TH</button>
 </main>
 
 <script>
+  // ── i18n ──────────────────────────────────────────────────────────────────
+  const TRANSLATIONS = {
+    en: {
+      // ── Hero ──
+      'hero-label': 'Claude Model Selection Guide · Anthropic',
+      'hero-h1': 'PICK THE<br><span class="accent">RIGHT</span><br>MODEL.',
+      'hero-sub': 'Not every task needs the biggest brain in the room.<br><strong>Over-selecting wastes cost, time, and tokens.</strong><br>Under-selecting fails the job. The skill is knowing which is which.',
+      // ── Warning ──
+      'warning-text': '<strong>COMMON MISTAKE:</strong> Defaulting to Opus for every task is like hiring a neurosurgeon to change a lightbulb. You\'re paying 15–30× more, waiting longer, and the result is the same. <strong>Model selection is a professional skill.</strong> This guide trains that instinct.',
+      // ── Section labels ──
+      'section-01': 'The Three Tiers',
+      'section-02': 'Capability Comparison',
+      'section-03': 'Task Fit Matrix',
+      'section-04': 'Model Selection Decision Tree',
+      'section-05': 'Overkill in the Wild',
+      'section-06': 'The Cost Reality',
+      'section-07': 'The Cheat Sheet',
+      'section-08': 'Claude Cowork — Desktop App',
+      // ── Model cards ──
+      'haiku-tier': 'Tier 1 · Speed',
+      'haiku-tagline': '"The sprinter. Blink-fast, cost-effective, capable enough for the everyday."',
+      'haiku-stat-speed-val': '⚡⚡⚡ Fastest',
+      'haiku-stat-cost-val': '$ (Lowest)',
+      'haiku-stat-reasoning-val': 'Moderate',
+      'haiku-stat-best-val': 'Classify · Extract · Route',
+      'sonnet-tier': 'Tier 2 · Balance ★ Default',
+      'sonnet-tagline': '"The workhorse. Intelligent, versatile, the right answer for most real work."',
+      'sonnet-stat-speed-val': '⚡⚡ Fast',
+      'sonnet-stat-cost-val': '$$ (Mid)',
+      'sonnet-stat-reasoning-val': 'Strong',
+      'sonnet-stat-best-val': 'Code · Analyze · Write',
+      'opus-tier': 'Tier 3 · Intelligence',
+      'opus-tagline': '"The strategist. Deep reasoning for genuinely complex, high-stakes challenges."',
+      'opus-stat-speed-val': '⚡ Slower',
+      'opus-stat-cost-val': '$$$$ (Highest)',
+      'opus-stat-reasoning-val': 'Exceptional',
+      'opus-stat-best-val': 'Research · Strategy · Novel problems',
+      'stat-label-speed': 'Speed',
+      'stat-label-cost': 'Cost',
+      'stat-label-reasoning': 'Reasoning Depth',
+      'stat-label-context': 'Context Window',
+      'stat-label-best': 'Best For',
+      'speed-bar-label': 'Relative Throughput',
+      // ── Meters ──
+      'meter-title': 'Where Each Model Shines',
+      'meter-sub': 'Relative performance across key capability dimensions',
+      'attr-speed-latency': 'Speed / Latency',
+      'attr-cost-efficiency': 'Cost Efficiency',
+      'attr-instruction': 'Instruction Following',
+      'attr-code-gen': 'Code Generation',
+      'attr-complex-reasoning': 'Complex Reasoning',
+      'attr-creative-writing': 'Creative Writing',
+      'attr-data-extraction': 'Data Extraction',
+      'attr-longdoc': 'Long-doc Analysis',
+      'attr-planning': 'Multi-step Planning',
+      'attr-summarization': 'Summarization',
+      // ── Matrix ──
+      'matrix-th-task': 'Task',
+      'task-classify-ticket': 'Classify a support ticket',
+      'task-extract-fields': 'Extract fields from a form/email',
+      'task-faq-reply': 'Generate a short FAQ reply',
+      'task-write-code': 'Write a feature in Python / JS',
+      'task-summarize-pdf': 'Summarize a 50-page PDF',
+      'task-debug-code': 'Debug complex distributed code',
+      'task-draft-email': 'Draft a business email',
+      'task-research-domain': 'Research a new scientific domain',
+      'task-strategic-plan': 'Multi-step strategic plan (novel)',
+      'task-red-team': 'Adversarial red-teaming / eval',
+      'task-translate': 'Translate text (common language)',
+      'task-legal-medical': 'High-stakes legal/medical reasoning',
+      'fit-best': '✓ Best fit',
+      'fit-ok-overkill': '△ Overkill',
+      'fit-way-overkill': '✗ Way overkill',
+      'fit-ok-acceptable': '△ Acceptable',
+      'fit-over-overkill': '✗ Overkill',
+      'fit-ok-shallow': '△ Shallow summary',
+      'fit-ok-costly': '△ Fine but costly',
+      'fit-poor-shallow': '✗ Too shallow',
+      'fit-ok-if-stuck': '△ If stuck, fine',
+      'fit-ok-simple': '△ OK for simple',
+      'fit-poor-insufficient': '✗ Insufficient',
+      'fit-ok-decent': '△ Decent',
+      'fit-ok-partial': '△ Partial',
+      'fit-poor-risky': '✗ Risky',
+      'fit-ok-careful': '△ Use carefully',
+      // ── Decision tree ──
+      'dt-heading': 'Ask These Questions First',
+      'dt-subtitle': 'Work through this before writing a single API call',
+      'dq1': '1 — Is the task well-defined with a clear, narrow output?',
+      'dq1-yes-ans': 'Single-step, structured output — classify, extract, translate, route',
+      'dq1-yes-result': '→ Start with HAIKU',
+      'dq1-no-ans': 'Involves writing, synthesis, reasoning, or multi-step generation',
+      'dq1-no-result': '→ Continue to Q2',
+      'dq2': '2 — Does the task involve novel problem-solving, deep analysis, or genuine uncertainty?',
+      'dq2-no-ans': 'Standard coding, writing, summarization, familiar domain work',
+      'dq2-no-result': '→ Use SONNET',
+      'dq2-yes-ans': 'Research, strategic planning, adversarial tasks, hard cross-domain reasoning',
+      'dq2-yes-result': '→ Continue to Q3',
+      'dq3': '3 — Did Sonnet already fail, or is the task high-stakes enough to justify 15–30× cost?',
+      'dq3-no-ans': 'Try Sonnet first. You might be surprised.',
+      'dq3-no-result': '→ Use SONNET, escalate if needed',
+      'dq3-yes-ans': 'Sonnet failed, or the stakes clearly justify the cost and wait time',
+      'dq3-yes-result': '→ Use OPUS',
+      // ── Overkill section ──
+      'overkill-heading': 'Real Examples · Bad vs Good Choice',
+      'overkill-subtitle': 'See the pattern. Build the instinct.',
+      'ok-title-ticket': 'Support Ticket Routing',
+      'ok-scenario-ticket': '"Classify this customer message as billing, technical, or general inquiry."',
+      'ok-bad-label-ticket': '❌ Over-selected',
+      'ok-bad-ticket': 'Using <strong>Opus</strong> — $0.015/1K tokens, 8 sec latency, 30× more expensive. The nuance here is zero.',
+      'ok-good-label-ticket': '✓ Right choice',
+      'ok-good-ticket': 'Using <strong>Haiku</strong> — $0.00025/1K tokens, under 1 sec. Perfect for high-volume classification.',
+      'ok-title-email': 'Email Reply Draft',
+      'ok-scenario-email': '"Write a polite 3-sentence reply to this meeting request."',
+      'ok-bad-label-email': '❌ Over-selected',
+      'ok-bad-email': 'Using <strong>Opus</strong> — maximal reasoning applied to a 3-sentence social task. Same output, 20× the wait.',
+      'ok-good-label-email': '✓ Right choice',
+      'ok-good-email': '<strong>Haiku or Sonnet</strong> — Haiku for templated, Sonnet if tone nuance matters. Both are instant.',
+      'ok-title-debug': 'Debugging a Function',
+      'ok-scenario-debug': '"This Python function is throwing a KeyError. What\'s wrong?"',
+      'ok-bad-label-debug': '❌ Under-selected',
+      'ok-bad-debug': 'Using <strong>Haiku</strong> — too shallow for code reasoning, may miss the root cause in non-trivial codebases.',
+      'ok-good-label-debug': '✓ Right choice',
+      'ok-good-debug': '<strong>Sonnet</strong> — strong code reasoning, fast, cost-efficient. Opus only if it involves deep system-wide logic.',
+      'ok-title-research': 'Novel Research Synthesis',
+      'ok-scenario-research': '"Synthesize the latest findings on mRNA vaccine platforms and identify open research questions."',
+      'ok-bad-label-research': '❌ Under-selected',
+      'ok-bad-research': 'Using <strong>Haiku or Sonnet</strong> — may miss nuance, conflate findings, or fail to identify genuine gaps in a complex field.',
+      'ok-good-label-research': '✓ Right choice',
+      'ok-good-research': '<strong>Opus</strong> — this is exactly where Opus earns its price. Deep domain reasoning, multi-source synthesis.',
+      // ── Cost ──
+      'cost-heading': 'Relative Cost Per Million Tokens',
+      'cost-subtitle': 'Illustrative ratios — exact pricing at anthropic.com/pricing',
+      'cost-label-haiku': 'Lowest input cost',
+      'cost-note-haiku': 'High-volume tasks — batch at scale',
+      'cost-label-sonnet': 'Mid-range cost',
+      'cost-note-sonnet': 'Production workloads — daily use',
+      'cost-label-opus': 'Premium cost',
+      'cost-note-opus': 'Strategic tasks — use intentionally',
+      'quick-math-heading': '💡 Quick Math',
+      'quick-math': 'Processing <strong>10,000 support tickets/day</strong> with Opus ≈ <span style="color:var(--danger)">$1,500/day</span><br>Processing <strong>10,000 support tickets/day</strong> with Haiku ≈ <span style="color:var(--ok)">$25/day</span><br><span style="color:var(--muted);font-style:italic;font-size:12px">Same classification quality. 60× cost difference.</span>',
+      // ── Cheat sheet ──
+      'cheat-haiku-when': 'Reach for Haiku when…',
+      'cheat-haiku-bullets': '↳ Task has a single correct output<br>↳ High volume (1K+ calls/day)<br>↳ Speed &lt; 1 sec is needed<br>↳ Classify, tag, route, translate<br>↳ You\'ve tested — it passes the eval<br>↳ Cost matters more than nuance',
+      'cheat-sonnet-when': 'Reach for Sonnet when…',
+      'cheat-sonnet-bullets': '↳ Code generation or debugging<br>↳ Writing with real quality bar<br>↳ Summarizing long documents<br>↳ You\'re unsure — default here<br>↳ Multi-step but familiar domain<br>↳ Production API, daily tasks',
+      'cheat-opus-when': 'Reach for Opus when…',
+      'cheat-opus-bullets': '↳ Sonnet already failed the task<br>↳ Genuinely novel problem space<br>↳ High-stakes: medical, legal, safety<br>↳ Deep cross-domain synthesis<br>↳ Strategic decisions with consequences<br>↳ Cost is irrelevant to the outcome',
+      // ── Cowork ──
+      'cowork-heading': 'Model Selection Inside Cowork',
+      'cowork-intro': 'Cowork is Anthropic\'s desktop tool for non-developers to automate file and task management. It uses a slightly different model lineup — the same instinct applies.',
+      'cowork-haiku-tier': 'Cowork · Speed',
+      'cowork-haiku-sub': 'Fastest, lowest usage cost',
+      'cowork-haiku-bullets': '↳ Quick file renames &amp; sorts<br>↳ Simple form extraction<br>↳ Batch repetitive tasks<br>↳ Fast lookups &amp; summaries<br>↳ High-volume automation',
+      'cowork-haiku-note': '💡 Cowork-specific note: Haiku 4.6 is newer than the Haiku 4.5 in the API — same tier, slightly improved.',
+      'cowork-sonnet-tier': 'Cowork · Default ★',
+      'cowork-sonnet-sub': 'Balanced — your everyday Cowork model',
+      'cowork-sonnet-bullets': '↳ Document drafting &amp; editing<br>↳ Spreadsheet creation<br>↳ Multi-step file workflows<br>↳ Email &amp; report generation<br>↳ Vision + computer use tasks',
+      'cowork-sonnet-note': '💡 Start here for virtually all Cowork tasks. Same model as the API default — consistent behaviour.',
+      'cowork-opus-tier': 'Cowork · Power',
+      'cowork-opus-sub': 'Most capable — deepest reasoning',
+      'cowork-opus-bullets': '↳ Complex multi-doc synthesis<br>↳ Long research &amp; analysis tasks<br>↳ Tasks Sonnet got wrong<br>↳ High-stakes deliverables<br>↳ Novel, open-ended problems',
+      'cowork-opus-note': '💡 Cowork uses Opus 4.7 (one step newer than API default Opus 4.6). Reserve for complex tasks only.',
+      'adaptive-title': 'Adaptive Thinking — Cowork\'s Smart Toggle',
+      'adaptive-body': 'Cowork includes an <strong style="color:var(--text)">Adaptive Thinking</strong> feature (available on Sonnet 4.6 and Opus 4.6/4.7). When enabled, Claude automatically calibrates <em>how much it thinks</em> based on task complexity — simple questions get fast answers, complex ones get deeper reasoning, without you micromanaging it.',
+      'adaptive-on-label': '✓ Turn it ON when',
+      'adaptive-on-body': 'You\'re unsure how complex the task is<br>You want the model to self-regulate<br>Tasks vary in depth within a session',
+      'adaptive-warn-label': '⚠ Watch out',
+      'adaptive-warn-body': 'It still uses more tokens than Haiku<br>Not a reason to always pick Opus<br>Model tier still matters — start with Sonnet',
+      'cowork-compare-heading': 'Cowork vs API — Model Lineup at a Glance',
+      'cowork-th-tier': 'Tier',
+      'cowork-row-api': 'claude.ai / API',
+      'cowork-row-cowork': 'Cowork (desktop)',
+      'cowork-row-principle': 'Selection principle',
+      'cowork-col-haiku-api': 'Haiku 4.5',
+      'cowork-col-sonnet-api': 'Sonnet 4.6',
+      'cowork-col-opus-api': 'Opus 4.6',
+      'cowork-col-haiku-cw': 'Haiku 4.6 ✦',
+      'cowork-col-sonnet-cw': 'Sonnet 4.6',
+      'cowork-col-opus-cw': 'Opus 4.7 ✦',
+      'cowork-principle-haiku': 'Fast, simple tasks',
+      'cowork-principle-sonnet': 'Default — most work',
+      'cowork-principle-opus': 'Complex only',
+      'cowork-footnote': '✦ Cowork ships with newer point versions of Haiku and Opus. The tier logic and selection instinct remains identical.',
+      // ── Footer ──
+      'footer-msg': '<strong>The best engineers know when to use a scalpel vs a sledgehammer.</strong><br>Model selection isn\'t about picking the most powerful tool — it\'s about matching the right tool to the job. Over-engineering wastes resources. Under-engineering fails users. Build the instinct to tell the difference.',
+      'footer-tag': 'Claude Model Guide<br>Haiku · Sonnet · Opus<br>claude.ai · Cowork<br>anthropic.com',
+    },
+    th: {
+      // ── Hero ──
+      'hero-label': 'คู่มือเลือกโมเดล Claude · Anthropic',
+      'hero-h1': 'เลือกโมเดล<br><span class="accent">ให้</span><br>เหมาะสม',
+      'hero-sub': 'ไม่ใช่ทุกงานที่ต้องการสมองที่ใหญ่ที่สุดในห้อง<br><strong>การเลือกโมเดลที่ใหญ่เกินไปสิ้นเปลืองทั้งค่าใช้จ่าย เวลา และ tokens</strong><br>การเลือกโมเดลที่เล็กเกินไปก็ทำงานผิดพลาด ทักษะคือการรู้ว่าอะไรคืออะไร',
+      // ── Warning ──
+      'warning-text': '<strong>ความผิดพลาดที่พบบ่อย:</strong> การใช้ Opus กับทุกงานก็เหมือนจ้างศัลยแพทย์สมองมาเปลี่ยนหลอดไฟ คุณจ่ายเงินแพงกว่า 15–30 เท่า รอนานกว่า แต่ผลลัพธ์เหมือนกัน <strong>การเลือกโมเดลคือทักษะมืออาชีพ</strong> คู่มือนี้ช่วยฝึกสัญชาตญาณนั้น',
+      // ── Section labels ──
+      'section-01': 'สามระดับของโมเดล',
+      'section-02': 'เปรียบเทียบความสามารถ',
+      'section-03': 'ตารางความเหมาะสมของงาน',
+      'section-04': 'แผนผังการตัดสินใจเลือกโมเดล',
+      'section-05': 'ตัวอย่างการใช้เกินจำเป็นในชีวิตจริง',
+      'section-06': 'ความเป็นจริงด้านราคา',
+      'section-07': 'สรุปการใช้งาน',
+      'section-08': 'Claude Cowork — แอปเดสก์ท็อป',
+      // ── Model cards ──
+      'haiku-tier': 'ระดับ 1 · ความเร็ว',
+      'haiku-tagline': '"นักวิ่งระยะสั้น ตอบไวสุดๆ ราคาถูก เหมาะกับงานประจำวัน"',
+      'haiku-stat-speed-val': '⚡⚡⚡ เร็วที่สุด',
+      'haiku-stat-cost-val': '$ (ถูกที่สุด)',
+      'haiku-stat-reasoning-val': 'ปานกลาง',
+      'haiku-stat-best-val': 'จัดประเภท · ดึงข้อมูล · กำหนดเส้นทาง',
+      'sonnet-tier': 'ระดับ 2 · สมดุล ★ ค่าเริ่มต้น',
+      'sonnet-tagline': '"ม้าทำงาน ฉลาด หลากหลาย ตอบโจทย์งานส่วนใหญ่ได้ดี"',
+      'sonnet-stat-speed-val': '⚡⚡ เร็ว',
+      'sonnet-stat-cost-val': '$$ (กลาง)',
+      'sonnet-stat-reasoning-val': 'แข็งแกร่ง',
+      'sonnet-stat-best-val': 'โค้ด · วิเคราะห์ · เขียน',
+      'opus-tier': 'ระดับ 3 · ความฉลาด',
+      'opus-tagline': '"นักยุทธศาสตร์ คิดลึก สำหรับงานซับซ้อนที่มีความสำคัญจริงๆ"',
+      'opus-stat-speed-val': '⚡ ช้ากว่า',
+      'opus-stat-cost-val': '$$$$ (แพงที่สุด)',
+      'opus-stat-reasoning-val': 'ยอดเยี่ยม',
+      'opus-stat-best-val': 'วิจัย · วางกลยุทธ์ · ปัญหาใหม่',
+      'stat-label-speed': 'ความเร็ว',
+      'stat-label-cost': 'ราคา',
+      'stat-label-reasoning': 'ความลึกของการคิด',
+      'stat-label-context': 'ขนาด Context Window',
+      'stat-label-best': 'เหมาะกับ',
+      'speed-bar-label': 'ปริมาณงานสัมพัทธ์',
+      // ── Meters ──
+      'meter-title': 'จุดเด่นของแต่ละโมเดล',
+      'meter-sub': 'ประสิทธิภาพสัมพัทธ์ในแต่ละมิติความสามารถ',
+      'attr-speed-latency': 'ความเร็ว / Latency',
+      'attr-cost-efficiency': 'ประสิทธิภาพต่อราคา',
+      'attr-instruction': 'การทำตามคำสั่ง',
+      'attr-code-gen': 'การเขียนโค้ด',
+      'attr-complex-reasoning': 'การคิดเชิงซับซ้อน',
+      'attr-creative-writing': 'การเขียนเชิงสร้างสรรค์',
+      'attr-data-extraction': 'การดึงข้อมูล',
+      'attr-longdoc': 'วิเคราะห์เอกสารยาว',
+      'attr-planning': 'การวางแผนหลายขั้นตอน',
+      'attr-summarization': 'การสรุปความ',
+      // ── Matrix ──
+      'matrix-th-task': 'งาน',
+      'task-classify-ticket': 'จัดประเภท Support Ticket',
+      'task-extract-fields': 'ดึงข้อมูลจากฟอร์ม/อีเมล',
+      'task-faq-reply': 'ตอบ FAQ สั้นๆ',
+      'task-write-code': 'เขียน Feature ด้วย Python/JS',
+      'task-summarize-pdf': 'สรุป PDF 50 หน้า',
+      'task-debug-code': 'Debug โค้ด Distributed ซับซ้อน',
+      'task-draft-email': 'ร่างอีเมลธุรกิจ',
+      'task-research-domain': 'ค้นคว้าสาขาวิทยาศาสตร์ใหม่',
+      'task-strategic-plan': 'วางแผนกลยุทธ์หลายขั้นตอน (ใหม่)',
+      'task-red-team': 'ทดสอบเชิงปฏิปักษ์ / ประเมิน',
+      'task-translate': 'แปลภาษา (ภาษาทั่วไป)',
+      'task-legal-medical': 'การคิดเชิงกฎหมาย/การแพทย์ที่เสี่ยงสูง',
+      'fit-best': '✓ เหมาะที่สุด',
+      'fit-ok-overkill': '△ เกินจำเป็น',
+      'fit-way-overkill': '✗ เกินจำเป็นมาก',
+      'fit-ok-acceptable': '△ ใช้ได้',
+      'fit-over-overkill': '✗ เกินจำเป็น',
+      'fit-ok-shallow': '△ สรุปแบบผิวเผิน',
+      'fit-ok-costly': '△ ใช้ได้แต่แพง',
+      'fit-poor-shallow': '✗ ตื้นเกินไป',
+      'fit-ok-if-stuck': '△ ถ้าติดขัด ใช้ได้',
+      'fit-ok-simple': '△ สำหรับงานง่าย',
+      'fit-poor-insufficient': '✗ ไม่เพียงพอ',
+      'fit-ok-decent': '△ พอใช้ได้',
+      'fit-ok-partial': '△ ทำได้บางส่วน',
+      'fit-poor-risky': '✗ เสี่ยงเกินไป',
+      'fit-ok-careful': '△ ระวังในการใช้',
+      // ── Decision tree ──
+      'dt-heading': 'ถามคำถามเหล่านี้ก่อน',
+      'dt-subtitle': 'คิดผ่านขั้นตอนนี้ก่อนเขียน API call แรก',
+      'dq1': '1 — งานมีผลลัพธ์ที่ชัดเจนและแคบหรือไม่?',
+      'dq1-yes-ans': 'ผลลัพธ์เดียว มีโครงสร้าง — จัดประเภท ดึงข้อมูล แปลภาษา กำหนดเส้นทาง',
+      'dq1-yes-result': '→ เริ่มด้วย HAIKU',
+      'dq1-no-ans': 'งานที่ต้องเขียน สังเคราะห์ คิด หรือสร้างหลายขั้นตอน',
+      'dq1-no-result': '→ ไปคำถาม Q2',
+      'dq2': '2 — งานต้องการการแก้ปัญหาใหม่ วิเคราะห์เชิงลึก หรือมีความไม่แน่นอนจริงๆ หรือไม่?',
+      'dq2-no-ans': 'โค้ดมาตรฐาน เขียน สรุป งานในสาขาที่คุ้นเคย',
+      'dq2-no-result': '→ ใช้ SONNET',
+      'dq2-yes-ans': 'วิจัย วางแผนกลยุทธ์ งานเชิงปฏิปักษ์ การคิดข้ามสาขาที่ยาก',
+      'dq2-yes-result': '→ ไปคำถาม Q3',
+      'dq3': '3 — Sonnet ล้มเหลวแล้ว หรืองานสำคัญพอที่จะจ่ายแพงกว่า 15–30 เท่าหรือไม่?',
+      'dq3-no-ans': 'ลอง Sonnet ก่อน อาจจะแปลกใจ',
+      'dq3-no-result': '→ ใช้ SONNET ยกระดับถ้าจำเป็น',
+      'dq3-yes-ans': 'Sonnet ล้มเหลวแล้ว หรือความเสี่ยงสมเหตุสมผลกับราคาและเวลารอ',
+      'dq3-yes-result': '→ ใช้ OPUS',
+      // ── Overkill ──
+      'overkill-heading': 'ตัวอย่างจริง · ทางเลือกที่ดีและไม่ดี',
+      'overkill-subtitle': 'สังเกตรูปแบบ สร้างสัญชาตญาณ',
+      'ok-title-ticket': 'การกำหนดเส้นทาง Support Ticket',
+      'ok-scenario-ticket': '"จัดประเภทข้อความลูกค้านี้ว่าเป็นเรื่องการเงิน เทคนิค หรือสอบถามทั่วไป"',
+      'ok-bad-label-ticket': '❌ เลือกโมเดลเกินจำเป็น',
+      'ok-bad-ticket': 'ใช้ <strong>Opus</strong> — $0.015/1K tokens, latency 8 วินาที, แพงกว่า 30 เท่า ทั้งๆ ที่งานนี้ไม่ต้องการความละเอียดอ่อนเลย',
+      'ok-good-label-ticket': '✓ ทางเลือกที่ถูกต้อง',
+      'ok-good-ticket': 'ใช้ <strong>Haiku</strong> — $0.00025/1K tokens, ไม่ถึง 1 วินาที เหมาะกับการจัดประเภทปริมาณมาก',
+      'ok-title-email': 'ร่างการตอบอีเมล',
+      'ok-scenario-email': '"เขียนการตอบกลับ 3 ประโยคสุภาพสำหรับคำขอนัดประชุมนี้"',
+      'ok-bad-label-email': '❌ เลือกโมเดลเกินจำเป็น',
+      'ok-bad-email': 'ใช้ <strong>Opus</strong> — ใช้การคิดสูงสุดกับงานสังคมแค่ 3 ประโยค ผลลัพธ์เหมือนกัน รอนานกว่า 20 เท่า',
+      'ok-good-label-email': '✓ ทางเลือกที่ถูกต้อง',
+      'ok-good-email': '<strong>Haiku หรือ Sonnet</strong> — Haiku สำหรับแบบแผน Sonnet ถ้าต้องการความละเอียดของน้ำเสียง ทั้งคู่ตอบเร็ว',
+      'ok-title-debug': 'Debug ฟังก์ชัน',
+      'ok-scenario-debug': '"ฟังก์ชัน Python นี้เกิด KeyError อะไรผิดพลาด?"',
+      'ok-bad-label-debug': '❌ เลือกโมเดลน้อยเกินไป',
+      'ok-bad-debug': 'ใช้ <strong>Haiku</strong> — ตื้นเกินไปสำหรับการคิดด้านโค้ด อาจพลาดต้นตอปัญหาใน codebase ที่ซับซ้อน',
+      'ok-good-label-debug': '✓ ทางเลือกที่ถูกต้อง',
+      'ok-good-debug': '<strong>Sonnet</strong> — คิดด้านโค้ดได้แข็งแกร่ง เร็ว คุ้มราคา ใช้ Opus เฉพาะถ้าเกี่ยวกับ logic ระดับ system',
+      'ok-title-research': 'สังเคราะห์งานวิจัยใหม่',
+      'ok-scenario-research': '"สังเคราะห์ผลการค้นพบล่าสุดเกี่ยวกับแพลตฟอร์มวัคซีน mRNA และระบุคำถามการวิจัยที่ยังเปิดอยู่"',
+      'ok-bad-label-research': '❌ เลือกโมเดลน้อยเกินไป',
+      'ok-bad-research': 'ใช้ <strong>Haiku หรือ Sonnet</strong> — อาจพลาดความละเอียดอ่อน สับสนผลการค้นพบ หรือไม่สามารถระบุช่องว่างจริงในสาขาที่ซับซ้อน',
+      'ok-good-label-research': '✓ ทางเลือกที่ถูกต้อง',
+      'ok-good-research': '<strong>Opus</strong> — นี่คืองานที่ Opus คุ้มราคาจริงๆ การคิดเชิงสาขาลึก สังเคราะห์จากหลายแหล่ง',
+      // ── Cost ──
+      'cost-heading': 'ราคาสัมพัทธ์ต่อล้าน Tokens',
+      'cost-subtitle': 'อัตราส่วนเพื่อการเปรียบเทียบ — ราคาจริงที่ anthropic.com/pricing',
+      'cost-label-haiku': 'ราคา input ต่ำที่สุด',
+      'cost-note-haiku': 'งานปริมาณมาก — ประมวลผลเป็นชุด',
+      'cost-label-sonnet': 'ราคากลาง',
+      'cost-note-sonnet': 'งาน Production — ใช้งานประจำวัน',
+      'cost-label-opus': 'ราคาพรีเมียม',
+      'cost-note-opus': 'งานเชิงกลยุทธ์ — ใช้อย่างตั้งใจ',
+      'quick-math-heading': '💡 คำนวณเร็วๆ',
+      'quick-math': 'ประมวลผล <strong>10,000 Support Tickets/วัน</strong> ด้วย Opus ≈ <span style="color:var(--danger)">$1,500/วัน</span><br>ประมวลผล <strong>10,000 Support Tickets/วัน</strong> ด้วย Haiku ≈ <span style="color:var(--ok)">$25/วัน</span><br><span style="color:var(--muted);font-style:italic;font-size:12px">คุณภาพการจัดประเภทเท่ากัน ต่างกัน 60 เท่า</span>',
+      // ── Cheat sheet ──
+      'cheat-haiku-when': 'เลือก Haiku เมื่อ…',
+      'cheat-haiku-bullets': '↳ งานมีผลลัพธ์ที่ถูกต้องเดียว<br>↳ ปริมาณสูง (1K+ calls/วัน)<br>↳ ต้องการความเร็วต่ำกว่า 1 วินาที<br>↳ จัดประเภท แท็ก กำหนดเส้นทาง แปลภาษา<br>↳ ทดสอบแล้ว — ผ่าน eval<br>↳ ราคาสำคัญกว่าความละเอียดอ่อน',
+      'cheat-sonnet-when': 'เลือก Sonnet เมื่อ…',
+      'cheat-sonnet-bullets': '↳ เขียนโค้ดหรือ debug<br>↳ เขียนที่ต้องการคุณภาพจริงๆ<br>↳ สรุปเอกสารยาว<br>↳ ไม่แน่ใจ — เริ่มที่นี่<br>↳ หลายขั้นตอนแต่สาขาที่คุ้นเคย<br>↳ Production API งานประจำวัน',
+      'cheat-opus-when': 'เลือก Opus เมื่อ…',
+      'cheat-opus-bullets': '↳ Sonnet ล้มเหลวกับงานนั้น<br>↳ ปัญหาใหม่ที่ไม่เคยเจอ<br>↳ เดิมพันสูง: การแพทย์ กฎหมาย ความปลอดภัย<br>↳ สังเคราะห์ข้ามสาขาเชิงลึก<br>↳ การตัดสินใจเชิงกลยุทธ์ที่มีผลกระทบ<br>↳ ราคาไม่ใช่ปัจจัยเมื่อเทียบกับผลลัพธ์',
+      // ── Cowork ──
+      'cowork-heading': 'การเลือกโมเดลใน Cowork',
+      'cowork-intro': 'Cowork คือเครื่องมือเดสก์ท็อปของ Anthropic สำหรับผู้ที่ไม่ใช่นักพัฒนา เพื่อจัดการไฟล์และงานอัตโนมัติ ใช้รายชื่อโมเดลที่แตกต่างกันเล็กน้อย — แต่สัญชาตญาณการเลือกเหมือนกัน',
+      'cowork-haiku-tier': 'Cowork · ความเร็ว',
+      'cowork-haiku-sub': 'เร็วที่สุด ค่าใช้จ่ายต่ำที่สุด',
+      'cowork-haiku-bullets': '↳ เปลี่ยนชื่อและเรียงลำดับไฟล์เร็ว<br>↳ ดึงข้อมูลจากฟอร์มง่ายๆ<br>↳ งานซ้ำๆ แบบ Batch<br>↳ ค้นหาและสรุปเร็ว<br>↳ ระบบอัตโนมัติปริมาณมาก',
+      'cowork-haiku-note': '💡 หมายเหตุ Cowork: Haiku 4.6 ใหม่กว่า Haiku 4.5 ใน API — ระดับเดียวกัน ดีขึ้นเล็กน้อย',
+      'cowork-sonnet-tier': 'Cowork · ค่าเริ่มต้น ★',
+      'cowork-sonnet-sub': 'สมดุล — โมเดล Cowork ประจำวันของคุณ',
+      'cowork-sonnet-bullets': '↳ ร่างและแก้ไขเอกสาร<br>↳ สร้าง Spreadsheet<br>↳ Workflow ไฟล์หลายขั้นตอน<br>↳ สร้างอีเมลและรายงาน<br>↳ งาน Vision + computer use',
+      'cowork-sonnet-note': '💡 เริ่มที่นี่สำหรับงาน Cowork เกือบทั้งหมด โมเดลเดียวกับค่าเริ่มต้น API — พฤติกรรมสม่ำเสมอ',
+      'cowork-opus-tier': 'Cowork · พลังสูงสุด',
+      'cowork-opus-sub': 'ความสามารถสูงสุด — การคิดลึกที่สุด',
+      'cowork-opus-bullets': '↳ สังเคราะห์เอกสารหลายชิ้นซับซ้อน<br>↳ งานวิจัยและวิเคราะห์ยาว<br>↳ งานที่ Sonnet ทำผิดพลาด<br>↳ ผลงานที่มีเดิมพันสูง<br>↳ ปัญหาใหม่ปลายเปิด',
+      'cowork-opus-note': '💡 Cowork ใช้ Opus 4.7 (ใหม่กว่า Opus 4.6 ค่าเริ่มต้น API) สงวนไว้สำหรับงานซับซ้อนเท่านั้น',
+      'adaptive-title': 'Adaptive Thinking — สวิตช์อัจฉริยะของ Cowork',
+      'adaptive-body': 'Cowork มีฟีเจอร์ <strong style="color:var(--text)">Adaptive Thinking</strong> (ใช้ได้กับ Sonnet 4.6 และ Opus 4.6/4.7) เมื่อเปิดใช้งาน Claude จะปรับ <em>ระดับการคิด</em> ตามความซับซ้อนของงานโดยอัตโนมัติ — คำถามง่ายตอบเร็ว คำถามซับซ้อนคิดลึกขึ้น โดยไม่ต้องจัดการเอง',
+      'adaptive-on-label': '✓ เปิดเมื่อ',
+      'adaptive-on-body': 'ไม่แน่ใจว่างานซับซ้อนแค่ไหน<br>ต้องการให้โมเดลปรับตัวเอง<br>งานในเซสชันมีความลึกต่างกัน',
+      'adaptive-warn-label': '⚠ ระวัง',
+      'adaptive-warn-body': 'ยังใช้ tokens มากกว่า Haiku<br>ไม่ใช่เหตุผลที่จะเลือก Opus เสมอ<br>ระดับโมเดลยังสำคัญ — เริ่มที่ Sonnet',
+      'cowork-compare-heading': 'Cowork กับ API — รายชื่อโมเดลเปรียบเทียบ',
+      'cowork-th-tier': 'ระดับ',
+      'cowork-row-api': 'claude.ai / API',
+      'cowork-row-cowork': 'Cowork (desktop)',
+      'cowork-row-principle': 'หลักการเลือก',
+      'cowork-col-haiku-api': 'Haiku 4.5',
+      'cowork-col-sonnet-api': 'Sonnet 4.6',
+      'cowork-col-opus-api': 'Opus 4.6',
+      'cowork-col-haiku-cw': 'Haiku 4.6 ✦',
+      'cowork-col-sonnet-cw': 'Sonnet 4.6',
+      'cowork-col-opus-cw': 'Opus 4.7 ✦',
+      'cowork-principle-haiku': 'งานเร็ว ง่าย',
+      'cowork-principle-sonnet': 'ค่าเริ่มต้น — งานส่วนใหญ่',
+      'cowork-principle-opus': 'เฉพาะงานซับซ้อน',
+      'cowork-footnote': '✦ Cowork มาพร้อมเวอร์ชัน Haiku และ Opus ที่ใหม่กว่า หลักการเลือกและสัญชาตญาณเหมือนกันทุกประการ',
+      // ── Footer ──
+      'footer-msg': '<strong>วิศวกรที่ดีรู้ว่าเมื่อไหรควรใช้มีดผ่าตัดและเมื่อไหรควรใช้ค้อน</strong><br>การเลือกโมเดลไม่ใช่การเลือกเครื่องมือที่ทรงพลังที่สุด — แต่คือการจับคู่เครื่องมือที่เหมาะสมกับงาน การออกแบบเกินจำเป็นสิ้นเปลืองทรัพยากร การออกแบบน้อยเกินไปทำให้ผู้ใช้ผิดหวัง สร้างสัญชาตญาณที่รู้ความแตกต่าง',
+      'footer-tag': 'คู่มือโมเดล Claude<br>Haiku · Sonnet · Opus<br>claude.ai · Cowork<br>anthropic.com',
+    }
+  };
+
+  function applyLang(lang) {
+    document.documentElement.lang = lang;
+    document.querySelectorAll('[data-i18n]').forEach(el => {
+      const key = el.dataset.i18n;
+      if (TRANSLATIONS[lang][key] !== undefined)
+        el.textContent = TRANSLATIONS[lang][key];
+    });
+    document.querySelectorAll('[data-i18n-html]').forEach(el => {
+      const key = el.dataset.i18nHtml;
+      if (TRANSLATIONS[lang][key] !== undefined)
+        el.innerHTML = TRANSLATIONS[lang][key];
+    });
+    const btn = document.getElementById('langToggle');
+    btn.textContent = lang === 'en' ? 'TH' : 'EN';
+    localStorage.setItem('lang', lang);
+  }
+
+  document.getElementById('langToggle').addEventListener('click', () => {
+    const current = localStorage.getItem('lang') || 'en';
+    applyLang(current === 'en' ? 'th' : 'en');
+  });
+
   // ── ANIMATE BARS ON LOAD ──
   window.addEventListener('DOMContentLoaded', () => {
+    // restore saved language
+    const saved = localStorage.getItem('lang');
+    if (saved && saved !== 'en') applyLang(saved);
+
     const fills = document.querySelectorAll('.meter-bar-fill');
     fills.forEach(f => {
       const target = f.style.width;
